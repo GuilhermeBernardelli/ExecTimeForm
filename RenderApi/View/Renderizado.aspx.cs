@@ -341,7 +341,7 @@ namespace RenderApi.View
             {
 
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
-                Response.Redirect("Selecao.aspx");
+                Response.Redirect("Index.aspx");
                 count = 0;
             }
 

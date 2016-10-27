@@ -25,6 +25,7 @@ namespace CreateApi.Model
         public Nullable<int> id_questionario { get; set; }
         public Nullable<int> tipo { get; set; }
         public int numero { get; set; }
+        public Nullable<int> qnt_opcoes { get; set; }
     
         public virtual Questionarios Questionarios { get; set; }
         public virtual Tipos Tipos { get; set; }
