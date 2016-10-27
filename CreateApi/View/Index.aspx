@@ -32,7 +32,7 @@
             <asp:Label ID="lblAlerta" runat="server" Font-Bold="True" ForeColor="Red"></asp:Label>
             <br />
             Registro:
-            <asp:TextBox ID="txtRegistro" runat="server" Width="169px"></asp:TextBox>
+            <asp:TextBox ID="txtRegistro" runat="server" Width="169px" AutoCompleteType="Disabled" AutoPostBack="True" CausesValidation="True" TextMode="Number" ValidateRequestMode="Enabled"></asp:TextBox>
             <br />
             <br />
             Senha:&nbsp;&nbsp;&nbsp;

@@ -35,7 +35,7 @@ namespace CreateApi.View
                 if (user.senha.Equals(senha) && user.perfil == 1)
                 {
                     Session["user"] = registro;
-                    Response.Redirect("Usuarios.aspx");
+                    Response.Redirect("Usuario.aspx");
                 }
                 else
                 {

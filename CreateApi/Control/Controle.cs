@@ -167,6 +167,13 @@ namespace CreateApi.Control
         /*
         * Pesquisa de Usuários
         */
+        public List<Usuarios> pesquisaGeralUsuários(string valor)
+        {
+            string pesquisa = valor;
+
+            return dbRepository.pesquisaGeralUsers(pesquisa);
+        }
+
         public List<Usuarios> pesquisaUser()
         {
             return dbRepository.pesquisaTodosUsers();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CreateApi.Model
@@ -161,6 +162,14 @@ namespace CreateApi.Model
         /*
          * Pesquisa de usuário
          */
+        public List<Usuarios> pesquisaGeralUsers(string valor)
+        {
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.nome.Contains(valor))
+                    || (usuario.registro == Convert.ToInt32(valor))
+                    select usuario).ToList();
+        }
+
         public List<Usuarios> pesquisaTodosUsers()
         {
             return (from usuario in entityModel.Usuarios

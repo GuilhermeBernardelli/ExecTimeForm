@@ -70,6 +70,7 @@
           <Property Name="nome" Type="varchar" MaxLength="70" Nullable="false" />
           <Property Name="registro" Type="int" />
           <Property Name="senha" Type="varchar" MaxLength="16" />
+          <Property Name="perfil" Type="int" />
         </EntityType>
         <Association Name="FK__Perguntas__id_qu__6FE99F9F">
           <End Role="Questionarios" Type="Self.Questionarios" Multiplicity="0..1" />
@@ -143,10 +144,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="Procedure" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="param1" Type="int" Mode="In" />
-          <Parameter Name="param2" Type="int" Mode="In" />
-        </Function>
         <Function Name="realiza_preenchimento" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id_quest" Type="int" Mode="In" />
           <Parameter Name="id_render" Type="int" Mode="In" />
@@ -193,16 +190,28 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="titulo" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="obrigatorio" Type="Boolean" Nullable="false" />
           <Property Name="id_questionario" Type="Int32" />
           <Property Name="tipo" Type="Int32" />
-          <NavigationProperty Name="Questionarios" Relationship="Self.FK__Perguntas__id_qu__403A8C7D" FromRole="Perguntas" ToRole="Questionarios" />
-          <NavigationProperty Name="Tipos" Relationship="Self.FK__Perguntas__tipo__48CFD27E" FromRole="Perguntas" ToRole="Tipos" />
-          <NavigationProperty Name="Respostas" Relationship="Self.FK__Respostas__id_pe__47DBAE45" FromRole="Perguntas" ToRole="Respostas" />
           <Property Name="numero" Type="Int32" Nullable="false" />
           <Property Name="qnt_opcoes" Type="Int32" />
+          <NavigationProperty Name="Questionarios" Relationship="Self.FK__Perguntas__id_qu__6FE99F9F" FromRole="Perguntas" ToRole="Questionarios" />
+          <NavigationProperty Name="Tipos" Relationship="Self.FK__Perguntas__tipo__70DDC3D8" FromRole="Perguntas" ToRole="Tipos" />
+          <NavigationProperty Name="Respostas" Relationship="Self.FK__Respostas__id_pe__04E4BC85" FromRole="Perguntas" ToRole="Respostas" />
+        </EntityType>
+        <EntityType Name="Prenchimentos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_renderizar" Type="Int32" Nullable="false" />
+          <Property Name="valor_resposta" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="id_pergunta" Type="Int32" />
+          <Property Name="usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="resposta" Type="Int32" />
+          <NavigationProperty Name="Renderizar" Relationship="Self.FK__Prenchime__id_re__1BC821DD" FromRole="Prenchimentos" ToRole="Renderizar" />
         </EntityType>
         <EntityType Name="Questionarios">
           <Key>
@@ -211,18 +220,31 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nome" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ativo" Type="Boolean" />
-          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Perguntas__id_qu__403A8C7D" FromRole="Questionarios" ToRole="Perguntas" />
-          <NavigationProperty Name="Renderizar" Relationship="DatabaseModel.FK__Renderiza__id_qu__17F790F9" FromRole="Questionarios" ToRole="Renderizar" />
+          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Perguntas__id_qu__6FE99F9F" FromRole="Questionarios" ToRole="Perguntas" />
+          <NavigationProperty Name="Renderizar" Relationship="Self.FK__Renderiza__id_qu__17F790F9" FromRole="Questionarios" ToRole="Renderizar" />
+        </EntityType>
+        <EntityType Name="Renderizar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_questionario" Type="Int32" Nullable="false" />
+          <Property Name="id_usuario" Type="Int32" />
+          <Property Name="data_renderizado" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="data_validade" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Prenchimentos" Relationship="Self.FK__Prenchime__id_re__1BC821DD" FromRole="Renderizar" ToRole="Prenchimentos" />
+          <NavigationProperty Name="Questionarios" Relationship="Self.FK__Renderiza__id_qu__17F790F9" FromRole="Renderizar" ToRole="Questionarios" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK__Renderiza__id_us__18EBB532" FromRole="Renderizar" ToRole="Usuarios" />
         </EntityType>
         <EntityType Name="Respostas">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="resposta" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="id_pergunta" Type="Int32" />
-          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Respostas__id_pe__47DBAE45" FromRole="Respostas" ToRole="Perguntas" />
           <Property Name="ordem" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Respostas__id_pe__04E4BC85" FromRole="Respostas" ToRole="Perguntas" />
         </EntityType>
         <EntityType Name="Tipos">
           <Key>
@@ -230,9 +252,20 @@
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" />
           <Property Name="desc_tipo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Perguntas__tipo__48CFD27E" FromRole="Tipos" ToRole="Perguntas" />
+          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Perguntas__tipo__70DDC3D8" FromRole="Tipos" ToRole="Perguntas" />
         </EntityType>
-        <Association Name="FK__Perguntas__id_qu__403A8C7D">
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="70" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="registro" Type="Int32" />
+          <Property Name="senha" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="perfil" Type="Int32" />
+          <NavigationProperty Name="Renderizar" Relationship="Self.FK__Renderiza__id_us__18EBB532" FromRole="Usuarios" ToRole="Renderizar" />
+        </EntityType>
+        <Association Name="FK__Perguntas__id_qu__6FE99F9F">
           <End Role="Questionarios" Type="Self.Questionarios" Multiplicity="0..1" />
           <End Role="Perguntas" Type="Self.Perguntas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -244,7 +277,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Perguntas__tipo__48CFD27E">
+        <Association Name="FK__Perguntas__tipo__70DDC3D8">
           <End Role="Tipos" Type="Self.Tipos" Multiplicity="0..1" />
           <End Role="Perguntas" Type="Self.Perguntas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -256,7 +289,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Respostas__id_pe__47DBAE45">
+        <Association Name="FK__Respostas__id_pe__04E4BC85">
           <End Role="Perguntas" Type="Self.Perguntas" Multiplicity="0..1" />
           <End Role="Respostas" Type="Self.Respostas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -268,79 +301,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Perguntas" EntityType="Self.Perguntas" />
-          <EntitySet Name="Questionarios" EntityType="Self.Questionarios" />
-          <EntitySet Name="Respostas" EntityType="Self.Respostas" />
-          <EntitySet Name="Tipos" EntityType="Self.Tipos" />
-          <AssociationSet Name="FK__Perguntas__id_qu__403A8C7D" Association="Self.FK__Perguntas__id_qu__403A8C7D">
-            <End Role="Questionarios" EntitySet="Questionarios" />
-            <End Role="Perguntas" EntitySet="Perguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Perguntas__tipo__48CFD27E" Association="Self.FK__Perguntas__tipo__48CFD27E">
-            <End Role="Tipos" EntitySet="Tipos" />
-            <End Role="Perguntas" EntitySet="Perguntas" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Respostas__id_pe__47DBAE45" Association="Self.FK__Respostas__id_pe__47DBAE45">
-            <End Role="Perguntas" EntitySet="Perguntas" />
-            <End Role="Respostas" EntitySet="Respostas" />
-          </AssociationSet>
-          <EntitySet Name="Usuarios" EntityType="DatabaseModel.Usuarios" />
-          <EntitySet Name="Renderizar" EntityType="DatabaseModel.Renderizar" />
-          <AssociationSet Name="FK__Renderiza__id_qu__17F790F9" Association="DatabaseModel.FK__Renderiza__id_qu__17F790F9">
-            <End Role="Questionarios" EntitySet="Questionarios" />
-            <End Role="Renderizar" EntitySet="Renderizar" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Renderiza__id_us__18EBB532" Association="DatabaseModel.FK__Renderiza__id_us__18EBB532">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="Renderizar" EntitySet="Renderizar" />
-          </AssociationSet>
-          <EntitySet Name="Prenchimentos" EntityType="DatabaseModel.Prenchimentos" />
-          <AssociationSet Name="FK__Prenchime__id_re__1BC821DD" Association="DatabaseModel.FK__Prenchime__id_re__1BC821DD">
-            <End Role="Renderizar" EntitySet="Renderizar" />
-            <End Role="Prenchimentos" EntitySet="Prenchimentos" />
-          </AssociationSet>
-          <FunctionImport Name="PROCEDURE_QUEST">
-            <Parameter Name="id_quest" Mode="In" Type="Int32" />
-            <Parameter Name="id_render" Mode="In" Type="Int32" />
-            <Parameter Name="user" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="Procedure" ReturnType="Collection(DatabaseModel.Procedure_Result)">
-            <Parameter Name="param1" Mode="In" Type="Int32" />
-            <Parameter Name="param2" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="realiza_preenchimento" ReturnType="Collection(Int32)">
-            <Parameter Name="id_quest" Mode="In" Type="Int32" />
-            <Parameter Name="id_render" Mode="In" Type="Int32" />
-            <Parameter Name="user" Mode="In" Type="String" />
-          </FunctionImport>
-          </EntityContainer>
-        <EntityType Name="Usuarios">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nome" Type="String" Nullable="false" MaxLength="70" FixedLength="false" Unicode="false" />
-          <Property Name="registro" Type="Int32" />
-          <Property Name="senha" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Renderizar" Relationship="DatabaseModel.FK__Renderiza__id_us__18EBB532" FromRole="Usuarios" ToRole="Renderizar" />
-        </EntityType>
-        <EntityType Name="Renderizar">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_usuario" Type="Int32" />
-          <Property Name="id_questionario" Type="Int32" Nullable="false" />
-          <Property Name="data_renderizado" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="data_validade" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Questionarios" Relationship="DatabaseModel.FK__Renderiza__id_qu__17F790F9" FromRole="Renderizar" ToRole="Questionarios" />
-          <NavigationProperty Name="Usuarios" Relationship="DatabaseModel.FK__Renderiza__id_us__18EBB532" FromRole="Renderizar" ToRole="Usuarios" />
-          <NavigationProperty Name="Prenchimentos" Relationship="DatabaseModel.FK__Prenchime__id_re__1BC821DD" FromRole="Renderizar" ToRole="Prenchimentos" />
-        </EntityType>
+        <Association Name="FK__Prenchime__id_re__1BC821DD">
+          <End Role="Renderizar" Type="Self.Renderizar" Multiplicity="1" />
+          <End Role="Prenchimentos" Type="Self.Prenchimentos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Renderizar">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Prenchimentos">
+              <PropertyRef Name="id_renderizar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Renderiza__id_qu__17F790F9">
-          <End Type="DatabaseModel.Questionarios" Role="Questionarios" Multiplicity="1" />
-          <End Type="DatabaseModel.Renderizar" Role="Renderizar" Multiplicity="*" />
+          <End Role="Questionarios" Type="Self.Questionarios" Multiplicity="1" />
+          <End Role="Renderizar" Type="Self.Renderizar" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Questionarios">
               <PropertyRef Name="id" />
@@ -351,8 +326,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__Renderiza__id_us__18EBB532">
-          <End Type="DatabaseModel.Usuarios" Role="Usuarios" Multiplicity="0..1" />
-          <End Type="DatabaseModel.Renderizar" Role="Renderizar" Multiplicity="*" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Renderizar" Type="Self.Renderizar" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Usuarios">
               <PropertyRef Name="id" />
@@ -362,35 +337,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Prenchimentos">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_renderizar" Type="Int32" Nullable="false" />
-          <Property Name="valor_resposta" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="resposta" Type="Int32" />
-          <Property Name="id_pergunta" Type="Int32" />
-          <Property Name="usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Renderizar" Relationship="DatabaseModel.FK__Prenchime__id_re__1BC821DD" FromRole="Prenchimentos" ToRole="Renderizar" />
-        </EntityType>
-        <Association Name="FK__Prenchime__id_re__1BC821DD">
-          <End Type="DatabaseModel.Renderizar" Role="Renderizar" Multiplicity="1" />
-          <End Type="DatabaseModel.Prenchimentos" Role="Prenchimentos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Renderizar">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Prenchimentos">
-              <PropertyRef Name="id_renderizar" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <ComplexType Name="Procedure_Result">
-          <Property Type="Int32" Name="Column1" Nullable="true" />
-          <Property Type="Int32" Name="Column2" Nullable="true" />
-        </ComplexType>
-        </Schema>
+        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Perguntas" EntityType="Self.Perguntas" />
+          <EntitySet Name="Prenchimentos" EntityType="Self.Prenchimentos" />
+          <EntitySet Name="Questionarios" EntityType="Self.Questionarios" />
+          <EntitySet Name="Renderizar" EntityType="Self.Renderizar" />
+          <EntitySet Name="Respostas" EntityType="Self.Respostas" />
+          <EntitySet Name="Tipos" EntityType="Self.Tipos" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK__Perguntas__id_qu__6FE99F9F" Association="Self.FK__Perguntas__id_qu__6FE99F9F">
+            <End Role="Questionarios" EntitySet="Questionarios" />
+            <End Role="Perguntas" EntitySet="Perguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Perguntas__tipo__70DDC3D8" Association="Self.FK__Perguntas__tipo__70DDC3D8">
+            <End Role="Tipos" EntitySet="Tipos" />
+            <End Role="Perguntas" EntitySet="Perguntas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Respostas__id_pe__04E4BC85" Association="Self.FK__Respostas__id_pe__04E4BC85">
+            <End Role="Perguntas" EntitySet="Perguntas" />
+            <End Role="Respostas" EntitySet="Respostas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Prenchime__id_re__1BC821DD" Association="Self.FK__Prenchime__id_re__1BC821DD">
+            <End Role="Renderizar" EntitySet="Renderizar" />
+            <End Role="Prenchimentos" EntitySet="Prenchimentos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Renderiza__id_qu__17F790F9" Association="Self.FK__Renderiza__id_qu__17F790F9">
+            <End Role="Questionarios" EntitySet="Questionarios" />
+            <End Role="Renderizar" EntitySet="Renderizar" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Renderiza__id_us__18EBB532" Association="Self.FK__Renderiza__id_us__18EBB532">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Renderizar" EntitySet="Renderizar" />
+          </AssociationSet>
+          <FunctionImport Name="realiza_preenchimento" ReturnType="Collection(Int32)">
+            <Parameter Name="id_quest" Mode="In" Type="Int32" />
+            <Parameter Name="id_render" Mode="In" Type="Int32" />
+            <Parameter Name="user" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -399,13 +384,25 @@
           <EntitySetMapping Name="Perguntas">
             <EntityTypeMapping TypeName="DatabaseModel.Perguntas">
               <MappingFragment StoreEntitySet="Perguntas">
-                <ScalarProperty Name="qnt_opcoes" ColumnName="qnt_opcoes" />
-                <ScalarProperty Name="numero" ColumnName="numero" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="titulo" ColumnName="titulo" />
                 <ScalarProperty Name="obrigatorio" ColumnName="obrigatorio" />
                 <ScalarProperty Name="id_questionario" ColumnName="id_questionario" />
                 <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="qnt_opcoes" ColumnName="qnt_opcoes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Prenchimentos">
+            <EntityTypeMapping TypeName="DatabaseModel.Prenchimentos">
+              <MappingFragment StoreEntitySet="Prenchimentos">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_renderizar" ColumnName="id_renderizar" />
+                <ScalarProperty Name="valor_resposta" ColumnName="valor_resposta" />
+                <ScalarProperty Name="id_pergunta" ColumnName="id_pergunta" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+                <ScalarProperty Name="resposta" ColumnName="resposta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -418,13 +415,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Renderizar">
+            <EntityTypeMapping TypeName="DatabaseModel.Renderizar">
+              <MappingFragment StoreEntitySet="Renderizar">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_questionario" ColumnName="id_questionario" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="data_renderizado" ColumnName="data_renderizado" />
+                <ScalarProperty Name="data_validade" ColumnName="data_validade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Respostas">
             <EntityTypeMapping TypeName="DatabaseModel.Respostas">
               <MappingFragment StoreEntitySet="Respostas">
-                <ScalarProperty Name="ordem" ColumnName="ordem" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="resposta" ColumnName="resposta" />
                 <ScalarProperty Name="id_pergunta" ColumnName="id_pergunta" />
+                <ScalarProperty Name="ordem" ColumnName="ordem" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -439,44 +447,14 @@
           <EntitySetMapping Name="Usuarios">
             <EntityTypeMapping TypeName="DatabaseModel.Usuarios">
               <MappingFragment StoreEntitySet="Usuarios">
-                <ScalarProperty Name="senha" ColumnName="senha" />
-                <ScalarProperty Name="registro" ColumnName="registro" />
+                <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="nome" ColumnName="nome" />
-                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="registro" ColumnName="registro" />
+                <ScalarProperty Name="senha" ColumnName="senha" />
+                <ScalarProperty Name="perfil" ColumnName="perfil" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Renderizar">
-            <EntityTypeMapping TypeName="DatabaseModel.Renderizar">
-              <MappingFragment StoreEntitySet="Renderizar">
-                <ScalarProperty Name="data_validade" ColumnName="data_validade" />
-                <ScalarProperty Name="data_renderizado" ColumnName="data_renderizado" />
-                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
-                <ScalarProperty Name="id_questionario" ColumnName="id_questionario" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Prenchimentos">
-            <EntityTypeMapping TypeName="DatabaseModel.Prenchimentos">
-              <MappingFragment StoreEntitySet="Prenchimentos">
-                <ScalarProperty Name="resposta" ColumnName="resposta" />
-                <ScalarProperty Name="usuario" ColumnName="usuario" />
-                <ScalarProperty Name="id_pergunta" ColumnName="id_pergunta" />
-                <ScalarProperty Name="valor_resposta" ColumnName="valor_resposta" />
-                <ScalarProperty Name="id_renderizar" ColumnName="id_renderizar" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Procedure" FunctionName="DatabaseModel.Store.Procedure">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DatabaseModel.Procedure_Result">
-                <ScalarProperty Name="Column1" ColumnName="Column1" />
-                <ScalarProperty Name="Column2" ColumnName="Column2" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="realiza_preenchimento" FunctionName="DatabaseModel.Store.realiza_preenchimento" />
         </EntityContainerMapping>
       </Mapping>

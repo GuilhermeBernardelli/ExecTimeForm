@@ -17,9 +17,9 @@ namespace RenderApi.Model
         public int id { get; set; }
         public int id_renderizar { get; set; }
         public string valor_resposta { get; set; }
-        public Nullable<int> resposta { get; set; }
         public Nullable<int> id_pergunta { get; set; }
         public string usuario { get; set; }
+        public Nullable<int> resposta { get; set; }
     
         public virtual Renderizar Renderizar { get; set; }
     }

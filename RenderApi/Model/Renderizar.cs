@@ -20,13 +20,13 @@ namespace RenderApi.Model
         }
     
         public int id { get; set; }
-        public Nullable<int> id_usuario { get; set; }
         public int id_questionario { get; set; }
+        public Nullable<int> id_usuario { get; set; }
         public System.DateTime data_renderizado { get; set; }
         public Nullable<System.DateTime> data_validade { get; set; }
     
+        public virtual ICollection<Prenchimentos> Prenchimentos { get; set; }
         public virtual Questionarios Questionarios { get; set; }
         public virtual Usuarios Usuarios { get; set; }
-        public virtual ICollection<Prenchimentos> Prenchimentos { get; set; }
     }
 }
