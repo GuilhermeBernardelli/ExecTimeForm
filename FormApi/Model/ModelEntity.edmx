@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BaseDadosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Perguntas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_questionario" Type="int" Nullable="false" />
+          <Property Name="titulo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tipo" Type="int" Nullable="false" />
+          <Property Name="obrigatorio" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Questionarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Respostas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="resposta" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tipos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="desc_tipo" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Perguntas__tipo__4F7CD00D">
+          <End Role="Tipos" Type="Self.Tipos" Multiplicity="1" />
+          <End Role="Perguntas" Type="Self.Perguntas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipos">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Perguntas">
+              <PropertyRef Name="tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDadosModelStoreContainer">
+          <EntitySet Name="Perguntas" EntityType="Self.Perguntas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Questionarios" EntityType="Self.Questionarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Respostas" EntityType="Self.Respostas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tipos" EntityType="Self.Tipos" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Perguntas__tipo__4F7CD00D" Association="Self.FK__Perguntas__tipo__4F7CD00D">
+            <End Role="Tipos" EntitySet="Tipos" />
+            <End Role="Perguntas" EntitySet="Perguntas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaseDadosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Perguntas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_questionario" Type="Int32" Nullable="false" />
+          <Property Name="titulo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tipo" Type="Int32" Nullable="false" />
+          <Property Name="obrigatorio" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tipos" Relationship="Self.FK__Perguntas__tipo__4F7CD00D" FromRole="Perguntas" ToRole="Tipos" />
+        </EntityType>
+        <EntityType Name="Questionarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Respostas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="resposta" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tipos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="desc_tipo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Perguntas" Relationship="Self.FK__Perguntas__tipo__4F7CD00D" FromRole="Tipos" ToRole="Perguntas" />
+        </EntityType>
+        <Association Name="FK__Perguntas__tipo__4F7CD00D">
+          <End Role="Tipos" Type="Self.Tipos" Multiplicity="1" />
+          <End Role="Perguntas" Type="Self.Perguntas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tipos">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Perguntas">
+              <PropertyRef Name="tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BDEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Perguntas" EntityType="Self.Perguntas" />
+          <EntitySet Name="Questionarios" EntityType="Self.Questionarios" />
+          <EntitySet Name="Respostas" EntityType="Self.Respostas" />
+          <EntitySet Name="Tipos" EntityType="Self.Tipos" />
+          <AssociationSet Name="FK__Perguntas__tipo__4F7CD00D" Association="Self.FK__Perguntas__tipo__4F7CD00D">
+            <End Role="Tipos" EntitySet="Tipos" />
+            <End Role="Perguntas" EntitySet="Perguntas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaseDadosModelStoreContainer" CdmEntityContainer="BDEntities">
+          <EntitySetMapping Name="Perguntas">
+            <EntityTypeMapping TypeName="BaseDadosModel.Perguntas">
+              <MappingFragment StoreEntitySet="Perguntas">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_questionario" ColumnName="id_questionario" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="obrigatorio" ColumnName="obrigatorio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questionarios">
+            <EntityTypeMapping TypeName="BaseDadosModel.Questionarios">
+              <MappingFragment StoreEntitySet="Questionarios">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Respostas">
+            <EntityTypeMapping TypeName="BaseDadosModel.Respostas">
+              <MappingFragment StoreEntitySet="Respostas">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="resposta" ColumnName="resposta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tipos">
+            <EntityTypeMapping TypeName="BaseDadosModel.Tipos">
+              <MappingFragment StoreEntitySet="Tipos">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="desc_tipo" ColumnName="desc_tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,32 @@
+﻿body {
+    background: linear-gradient(180deg, white , lightgray);
+    height: 1000px;
+    width: auto;
+    background-attachment: fixed;
+}
+
+#fundo{
+    width: 760px;
+    margin:0 auto;
+    margin-top: 20px;    
+}
+
+.button{
+    width: 110px;
+    background-color: lightgray;
+    color: forestgreen;
+    font-weight: bold;
+}
+
+.button:hover{
+    width: 110px;
+    background-color: white;
+    font-weight: bold;
+}
+
+.button:disabled{
+    width: 110px;
+    background-color: darkgray;
+    color: gray;
+    font-weight: bold;
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="449aea2852954390984e87c159b0a378" Name="Diagram1">
+        <EntityTypeShape EntityType="DatabaseModel.Perguntas" Width="1.5" PointX="3" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Questionarios" Width="1.5" PointX="6" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Respostas" Width="1.5" PointX="0.5" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Tipos" Width="1.5" PointX="3.125" PointY="3.875" IsExpanded="true" />
+        <AssociationConnector Association="DatabaseModel.FK__Perguntas__id_qu__403A8C7D" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK__Perguntas__tipo__48CFD27E" ManuallyRouted="false" />
+        <AssociationConnector Association="DatabaseModel.FK__Respostas__id_pe__47DBAE45" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DatabaseModel.Renderizar" Width="1.5" PointX="9.75" PointY="0.75" />
+        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_qu__17F790F9" />
+        <EntityTypeShape EntityType="DatabaseModel.Prenchimentos" Width="1.5" PointX="6.125" PointY="3.625" />
+        <AssociationConnector Association="DatabaseModel.FK__Prenchime__id_re__1BC821DD" />
+        <AssociationConnector Association="DatabaseModel.FK__Prenchime__id_re__1CBC4616" />
+        <EntityTypeShape EntityType="DatabaseModel.Usuarios" Width="1.5" PointX="10" PointY="4.375" />
+        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_us__18EBB532" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
