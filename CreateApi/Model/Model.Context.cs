@@ -12,6 +12,9 @@ namespace CreateApi.Model
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class DbEntities : DbContext
     {
@@ -26,11 +29,28 @@ namespace CreateApi.Model
         }
     
         public DbSet<Perguntas> Perguntas { get; set; }
+        public DbSet<Prenchimentos> Prenchimentos { get; set; }
         public DbSet<Questionarios> Questionarios { get; set; }
+        public DbSet<Renderizar> Renderizar { get; set; }
         public DbSet<Respostas> Respostas { get; set; }
         public DbSet<Tipos> Tipos { get; set; }
-        public DbSet<Renderizar> Renderizar { get; set; }
-        public DbSet<Prenchimentos> Prenchimentos { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
+    
+        public virtual ObjectResult<Nullable<int>> realiza_preenchimento(Nullable<int> id_quest, Nullable<int> id_render, string user)
+        {
+            var id_questParameter = id_quest.HasValue ?
+                new ObjectParameter("id_quest", id_quest) :
+                new ObjectParameter("id_quest", typeof(int));
+    
+            var id_renderParameter = id_render.HasValue ?
+                new ObjectParameter("id_render", id_render) :
+                new ObjectParameter("id_render", typeof(int));
+    
+            var userParameter = user != null ?
+                new ObjectParameter("user", user) :
+                new ObjectParameter("user", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("realiza_preenchimento", id_questParameter, id_renderParameter, userParameter);
+        }
     }
 }

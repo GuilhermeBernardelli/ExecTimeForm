@@ -43,6 +43,18 @@ namespace RenderApi.View
                         listaQuest.Add(quest);
                     }
                 }
+                if(registro != 0)
+                {
+                    LRend = controle.pesquisaRenderizarReg(0);
+                    foreach (Renderizar value in LRend)
+                    {
+                        quest = controle.pesquisaQuestionarioId(value.id_questionario);
+                        if (quest != null)
+                        {
+                            listaQuest.Add(quest);
+                        }
+                    }
+                }
                 if (listaQuest.Count() > 0)
                 {
                     carregaRadioList(listaQuest);

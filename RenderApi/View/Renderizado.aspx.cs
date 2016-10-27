@@ -13,6 +13,7 @@ namespace RenderApi.View
         static int id;
         static int reg;
         static int count = 0, countMax;
+        static bool selecao = false;
 
         static List<Perguntas> perg;
         static List<Respostas> resp;
@@ -95,7 +96,7 @@ namespace RenderApi.View
 
         public void posicionaPergunta()
         {
-
+            selecao = false;
             try
             {                                 
                 pnlPrincipal.Controls.Add(new LiteralControl("<p></p>"));
@@ -179,6 +180,7 @@ namespace RenderApi.View
                 if (valores.resposta == 1)
                 {
                     radioResposta.Items[i].Selected = true;
+                    selecao = true;
                 }
             }
 
@@ -210,6 +212,7 @@ namespace RenderApi.View
                 if (valores.resposta == 1)
                 {
                     chkResposta.Checked = true;
+                    selecao = true;
                 }
                                                                
             }                                   
@@ -234,6 +237,7 @@ namespace RenderApi.View
             if (valores.resposta == 1)
             {
                 txtResposta.Text = valores.valor_resposta;
+                selecao = true;
             }
             panelResposta.Controls.Add(txtResposta);
                       
@@ -257,6 +261,7 @@ namespace RenderApi.View
             if (valores.resposta == 1)
             {
                 dataResposta.Text = valores.valor_resposta;
+                selecao = true;
             }
             panelResposta.Controls.Add(dataResposta);
             
@@ -282,6 +287,7 @@ namespace RenderApi.View
             if (valores.resposta == 1)
             {
                 numResposta.Text = valores.valor_resposta;
+                selecao = true;
             }
             panelResposta.Controls.Add(numResposta);
             
@@ -295,6 +301,7 @@ namespace RenderApi.View
             if (caixa.Checked)
             {
                 valores.resposta = 1;
+                selecao = true;
                 controle.atualizarDados();
             }
             else
@@ -302,11 +309,12 @@ namespace RenderApi.View
                 valores.resposta = 0;
                 controle.atualizarDados();
             }
-                          
+            
         }
 
         protected void radioResposta_SelectedIndexChanged(object sender, EventArgs e)
         {
+            selecao = true;
             string itemSelecionado = radioResposta.SelectedItem.Text;
 
             for (int i = 0; i < radioResposta.Items.Count; i++)
@@ -320,79 +328,180 @@ namespace RenderApi.View
                 else
                 {
                     valores = controle.pesquisaPreenchimentoValor(radioResposta.Items[i].Text, render.id);
-                    valores.resposta = 0;
+                    valores.resposta = 0;                
                 }
             }
-            controle.atualizarDados();                        
+            controle.atualizarDados();
+                                   
         }
         
         private void txtResposta_TextChanged(object sender, EventArgs e)
-        {
+        {            
             TextBox text = sender as TextBox;
             valores = controle.pesquisaPreenchimento_perg_render(perg[count].id, render.id);
             valores.resposta = 1;
             valores.valor_resposta = text.Text;
-            controle.atualizarDados();
+            if (valores.valor_resposta.Equals(""))
+            {
+                selecao = false;
+            }
+            else
+            {
+                selecao = true;
+            }
+            controle.atualizarDados();          
         }
 
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            try
+            Label lblAlerta = new Label()
             {
+                ForeColor = System.Drawing.Color.Red,
+                Text = "Resposta obrigatória"
+            };
+            panelPergunta.Controls.Add(lblAlerta);
+            if (perg[count].obrigatorio && selecao)
+            {
+                try
+                {
 
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
-                Response.Redirect("Selecao.aspx");
-                count = 0;
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
+                    Response.Redirect("Index.aspx");
+                    count = 0;
+                }
+
+                catch
+                {
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Por algum motivo não foi possivel salvar as suas respostas');", true);
+                }
             }
-
-            catch
+            else if (!perg[count].obrigatorio)
             {
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Por algum motivo não foi possivel salvar as suas respostas');", true);
+                selecao = false;
+                lblAlerta.Visible = false;
+                try
+                {
+
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
+                    Response.Redirect("Index.aspx");
+                    count = 0;
+                }
+
+                catch
+                {
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Por algum motivo não foi possivel salvar as suas respostas');", true);
+                }
+            }
+            else
+            {
+                lblAlerta.Visible = true;
             }
 
         }
 
         protected void btnRight_Click(object sender, ImageClickEventArgs e)
         {
+            Label lblAlerta = new Label()
+            {
+                ForeColor = System.Drawing.Color.Red,
+                Text = "Resposta obrigatória"
+            };
+            panelPergunta.Controls.Add(lblAlerta);
             txtUser.Visible = false;
             lblAviso.Visible = false;
-            pnlPrincipal.Controls.Remove(panelPergunta);
-            
-            if (count >= countMax - 1)
+            if (perg[count].obrigatorio && selecao)
             {
-                count = countMax - 1;
-                posicionaPergunta();                
-            }
+                selecao = false;
+                lblAlerta.Visible = false;
+                pnlPrincipal.Controls.Remove(panelPergunta);
 
+                if (count >= countMax - 1)
+                {
+                    count = countMax - 1;
+                    posicionaPergunta();
+                }
+
+                else
+                {
+                    count++;
+                    posicionaPergunta();
+                }
+            }
+            else if (!perg[count].obrigatorio)
+            {
+                selecao = false;
+                lblAlerta.Visible = false;
+                pnlPrincipal.Controls.Remove(panelPergunta);
+
+                if (count >= countMax - 1)
+                {
+                    count = countMax - 1;
+                    posicionaPergunta();
+                }
+
+                else
+                {
+                    count++;
+                    posicionaPergunta();
+                }
+            }
             else
             {
-                count++;
-                posicionaPergunta();
+                lblAlerta.Visible = true;
             }
         }
 
 
         protected void btnLeft_Click(object sender, ImageClickEventArgs e)
         {
-            txtUser.Visible = false;
-            lblAviso.Visible = false;             
-            pnlPrincipal.Controls.Remove(panelPergunta);
-
-            if (count == 0)
+            Label lblAlerta = new Label()
             {
-                            
-                posicionaPergunta();                
-            }
+                ForeColor = System.Drawing.Color.Red,
+                Text = "Resposta obrigatória"
+            };
+            panelPergunta.Controls.Add(lblAlerta);
+            txtUser.Visible = false;
+            lblAviso.Visible = false;
+            if (perg[count].obrigatorio && selecao)
+            {
+                selecao = false;
+                lblAlerta.Visible = false;
+                pnlPrincipal.Controls.Remove(panelPergunta);
 
+                if (count == 0)
+                {
+
+                    posicionaPergunta();
+                }
+
+                else
+                {
+                    count--;
+                    posicionaPergunta();
+
+                }
+            }
+            else if (!perg[count].obrigatorio)
+            {
+                pnlPrincipal.Controls.Remove(panelPergunta);
+                lblAlerta.Visible = false;
+                if (count == 0)
+                {
+
+                    posicionaPergunta();
+                }
+
+                else
+                {
+                    count--;
+                    posicionaPergunta();
+
+                }
+            }
             else
             {
-                count--;                
-                posicionaPergunta();
-                
+                lblAlerta.Visible = true;
             }
-
-        }
-                
+        }       
     }
-
 }

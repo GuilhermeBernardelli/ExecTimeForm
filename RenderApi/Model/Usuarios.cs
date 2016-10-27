@@ -23,6 +23,7 @@ namespace RenderApi.Model
         public string nome { get; set; }
         public Nullable<int> registro { get; set; }
         public string senha { get; set; }
+        public Nullable<int> perfil { get; set; }
     
         public virtual ICollection<Renderizar> Renderizar { get; set; }
     }
