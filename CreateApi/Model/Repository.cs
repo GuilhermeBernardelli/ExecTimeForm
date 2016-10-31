@@ -41,6 +41,16 @@ namespace CreateApi.Model
             entityModel.Respostas.Add(resposta);
         }
 
+        public void salvarNovoRender(Renderizar render)
+        {
+            entityModel.Renderizar.Add(render);
+        }
+
+        public void excluirDadosRender(Renderizar render)
+        {
+            entityModel.Renderizar.Remove(render);
+        }
+
         public void excluirDadosResposta(Respostas resposta)
         {
             entityModel.Respostas.Remove(resposta);
@@ -163,10 +173,18 @@ namespace CreateApi.Model
          * Pesquisa de usuário
          */
         public List<Usuarios> pesquisaGeralUsers(string valor)
+        {         
+            
+                return (from usuario in entityModel.Usuarios
+                        where (usuario.nome.Contains(valor))
+                        select usuario).ToList();
+            
+        }
+
+        public List<Usuarios> pesquisaGeralUserReg(int valor)
         {
             return (from usuario in entityModel.Usuarios
-                    where (usuario.nome.Contains(valor))
-                    || (usuario.registro == Convert.ToInt32(valor))
+                    where (usuario.registro == (valor))
                     select usuario).ToList();
         }
 
@@ -183,5 +201,11 @@ namespace CreateApi.Model
                     select usuario).SingleOrDefault();
         }
 
+        public Usuarios pesquisaUsuarioNome(string valor)
+        {
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.nome.Equals(valor))
+                    select usuario).SingleOrDefault();
+        }
     }
 }

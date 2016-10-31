@@ -7,17 +7,21 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 namespace CreateApi.View
 {
     public partial class Usuario : System.Web.UI.Page
     {
         Controle controle = new Controle();
+        Renderizar render;
         List<Questionarios> LQuest;
         List<Usuarios> LUser;
+        static string tipo = null;
+        bool existe = false;
+        static string data;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            lblTipo.Visible = false;
             if (!IsPostBack)
             {
                 /*
@@ -28,13 +32,24 @@ namespace CreateApi.View
             }
         }
 
-        protected void btnQuestUser_Click(object sender, EventArgs e)
+        public void limpaFunction()
+        {
+            chkSelecionados.Items.Clear();           
+            lblAvisoQuest.Visible = false;
+            lblAvisoUser.Visible = false;
+            rblQuest.Visible = false;
+            rblUser.Visible = false;
+            txtQuest.Text = "";
+            txtUser.Text = "";
+        }
+
+        protected void btnUserQuest_Click(object sender, EventArgs e)
         {
             pnlPesquisaQuest.Visible = true;
             pnlMetodo.Visible = false;
         }
 
-        protected void btnUserQuest_Click(object sender, EventArgs e)
+        protected void btnQuestUser_Click(object sender, EventArgs e)
         {
             pnlPesquisaUser.Visible = true;
             pnlMetodo.Visible = false;
@@ -82,7 +97,7 @@ namespace CreateApi.View
             else
             {
                 lblAvisoUser.Visible = false;
-                LUser = controle.pesquisaGeralUsuários(txtUser.Text);
+                LUser = controle.pesquisaGeralUsuarios(txtUser.Text);
                 if (LUser.Count == 0)
                 {
                     lblAvisoUser.Visible = true;
@@ -102,6 +117,178 @@ namespace CreateApi.View
                     }
                 }
             }
+        }
+
+        protected void rblQuest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tipo == null)
+            {
+                btnSalvar.Enabled = false;
+                lblTitulo.Text = "Inclusão de usuários ao questionário";
+                lblTipo.Visible = true;
+                lblTipo.Text = rblQuest.SelectedItem.Text + ":";
+                pnlPesquisaQuest.Visible = false;
+                pnlPrincipal.Visible = true;
+                btnAlterar.Text = "Outro Question.";
+                tipo = "quest";                
+            }
+            else
+            {
+                btnSalvar.Enabled = true;
+                for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                {
+                    if (chkSelecionados.Items[i].Equals(rblQuest.SelectedItem))
+                    {
+                        existe = true;
+                    }
+                }
+                if (!existe)
+                {
+                    btnVoltaQuest.Text = "Desfazer";
+                    txtQuest.Text = "";
+                    chkSelecionados.Items.Add(rblQuest.SelectedItem);
+                    rblQuest.Items.Clear();
+                    chkSelecionados.Visible = true;
+                }
+                else
+                {
+                    existe = false;
+                    lblAvisoQuest.Visible = true;
+                    lblAvisoQuest.Text = "Usuário já incluso na lista";
+                }
+            }
+        }
+
+        protected void rblUser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tipo == null)
+            {
+                btnSalvar.Enabled = false;
+                lblTitulo.Text = "Inclusão de questionários ao usuário";
+                lblTipo.Visible = true;
+                lblTipo.Text = rblUser.SelectedItem.Text + ":";
+                pnlPesquisaUser.Visible = false;
+                pnlPrincipal.Visible = true;
+                btnAlterar.Text = "Outro Usuário";
+                tipo = "user";
+            }
+            else
+            {
+                btnSalvar.Enabled = true;
+                for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                {
+                    if (chkSelecionados.Items[i].Equals(rblUser.SelectedItem))
+                    {
+                        existe = true;
+                    }
+                }
+                if (!existe)
+                {
+                    txtUser.Text = "";     
+                    chkSelecionados.Items.Add(rblUser.SelectedItem);
+                    rblUser.Items.Clear();
+                    chkSelecionados.Visible = true;
+                    btnVoltaUser.Text = "Desfazer";
+                }
+                else
+                {
+                    existe = false;
+                    lblAvisoUser.Visible = true;
+                    lblAvisoUser.Text = "Usuário já incluso na lista";
+                }
+            }
+        }
+
+        protected void btnVoltaUser_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        protected void btnVoltaQuest_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        protected void btnInclude_Click(object sender, EventArgs e)
+        {
+            btnInclude.Enabled = false;
+            limpaFunction();
+            if (tipo.Equals("user"))
+            {
+                pnlPesquisaQuest.Visible = true;
+                txtQuest.Text = "";
+            }
+            else
+            {
+                pnlDataValidade.Visible = true;
+                //pnlPesquisaUser.Visible = true;
+                //txtUser.Text = "";
+            }
+            btnVoltaQuest.Text = "Voltar";
+            btnVoltaUser.Text = "Voltar";
+        }
+
+        protected void btnAlterar_Click(object sender, EventArgs e)
+        {
+            btnInclude.Enabled = true;
+            limpaFunction();
+            if (tipo.Equals("quest"))
+            {
+                pnlPrincipal.Visible = false;
+                pnlPesquisaQuest.Visible = true;
+                pnlPesquisaUser.Visible = false;
+                txtQuest.Text = "";
+                tipo = null;
+            }
+            else
+            {
+                pnlPrincipal.Visible = false;
+                pnlPesquisaUser.Visible = true;
+                pnlPesquisaQuest.Visible = false;
+                txtUser.Text = "";
+                tipo = null;
+            }
+        }
+
+        protected void btnCancela_Click(object sender, EventArgs e)
+        {
+            tipo = null;
+            Response.Redirect("Usuario.aspx");            
+        }
+
+        protected void btnSalvar_Click(object sender, EventArgs e)
+        {
+            if (tipo.Equals("quest"))
+            {
+                LUser = new List<Usuarios>();
+                foreach(ListItem value in chkSelecionados.Items)
+                {
+                    LUser.Add(controle.pesquisaUsuarioNomeCompleto(value.Text));
+                }
+                foreach (Usuarios value in LUser)
+                {
+                    render = new Renderizar();
+                    controle.salvarRender(render);
+                    render.id_questionario = Convert.ToInt32(rblQuest.SelectedValue);
+                    render.data_renderizado = DateTime.Now;
+                    render.id_usuario = value.id;
+                    render.data_validade = Convert.ToDateTime(data);
+                    controle.atualizarDados();
+                }
+            }
+            else//tipo.Equals("user")
+            {
+
+            }
+            Response.Redirect("Usuario.aspx");
+        }
+
+        protected void btnData_Click(object sender, EventArgs e)
+        {
+            data = txtData.Text;
+            pnlDataValidade.Visible = false;
+            pnlPesquisaUser.Visible = true;
+            txtUser.Text = "";
         }
     }
 }

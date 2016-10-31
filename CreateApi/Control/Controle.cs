@@ -167,11 +167,18 @@ namespace CreateApi.Control
         /*
         * Pesquisa de Usuários
         */
-        public List<Usuarios> pesquisaGeralUsuários(string valor)
-        {
-            string pesquisa = valor;
-
-            return dbRepository.pesquisaGeralUsers(pesquisa);
+        public List<Usuarios> pesquisaGeralUsuarios(string valor)
+        {           
+            if (valor.All(char.IsDigit))
+            {
+                int pesquisa = Convert.ToInt32(valor);
+                return dbRepository.pesquisaGeralUserReg(pesquisa);
+            }
+            else
+            {
+                string pesquisa = valor;
+                return dbRepository.pesquisaGeralUsers(pesquisa);
+            }
         }
 
         public List<Usuarios> pesquisaUser()
@@ -184,6 +191,23 @@ namespace CreateApi.Control
             int pesquisa = valor;
 
             return dbRepository.pesquisaUsuarioReg(pesquisa);
+        }
+
+        public Usuarios pesquisaUsuarioNomeCompleto(string valor)
+        {
+            string pesquisa = valor;
+
+            return dbRepository.pesquisaUsuarioNome(pesquisa);
+        }
+
+        public void salvarRender(Renderizar render)
+        {
+            dbRepository.salvarNovoRender(render);
+        }
+
+        public void excluirRender(Renderizar render)
+        {
+            dbRepository.excluirDadosRender(render);
         }
     }
 }
