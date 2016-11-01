@@ -71,7 +71,7 @@ namespace CreateApi.Model
         public Questionarios pesquisaQuestionarioPorNome(string valor)
         {
             return (from questionario in entityModel.Questionarios
-                    where (questionario.nome.Contains(valor))
+                    where (questionario.nome.Equals(valor))
                     select questionario).SingleOrDefault();
         }
 

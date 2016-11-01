@@ -19,6 +19,7 @@ namespace CreateApi.View
         static string tipo = null;
         bool existe = false;
         static string data;
+        static List<DateTime> dataLista = new List<DateTime>();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -149,12 +150,15 @@ namespace CreateApi.View
                     chkSelecionados.Items.Add(rblQuest.SelectedItem);
                     rblQuest.Items.Clear();
                     chkSelecionados.Visible = true;
+                    pnlPrincipal.Enabled = false;
+                    pnlPesquisaQuest.Visible = false;
+                    pnlDataValidade.Visible = true;
                 }
                 else
                 {
                     existe = false;
                     lblAvisoQuest.Visible = true;
-                    lblAvisoQuest.Text = "Usuário já incluso na lista";
+                    lblAvisoQuest.Text = "Questionário já incluso na lista";
                 }
             }
         }
@@ -261,7 +265,7 @@ namespace CreateApi.View
             if (tipo.Equals("quest"))
             {
                 LUser = new List<Usuarios>();
-                foreach(ListItem value in chkSelecionados.Items)
+                foreach (ListItem value in chkSelecionados.Items)
                 {
                     LUser.Add(controle.pesquisaUsuarioNomeCompleto(value.Text));
                 }
@@ -278,17 +282,43 @@ namespace CreateApi.View
             }
             else//tipo.Equals("user")
             {
-
+                LQuest = new List<Questionarios>();
+                int i = 0;
+                foreach (ListItem value in chkSelecionados.Items)
+                {
+                    LQuest.Add(controle.pesquisaQuestionarioNome(value.Text));
+                }
+                foreach (Questionarios value in LQuest)
+                {
+                    render = new Renderizar();
+                    controle.salvarRender(render);
+                    render.id_usuario = Convert.ToInt32(rblUser.SelectedValue);
+                    render.data_renderizado = DateTime.Now;
+                    render.id_questionario = value.id;                    
+                    render.data_validade = dataLista[i++];
+                    controle.atualizarDados();
+                }
             }
             Response.Redirect("Usuario.aspx");
         }
 
         protected void btnData_Click(object sender, EventArgs e)
         {
-            data = txtData.Text;
-            pnlDataValidade.Visible = false;
-            pnlPesquisaUser.Visible = true;
-            txtUser.Text = "";
+            if (tipo.Equals("user"))
+            {                
+                dataLista.Add(Convert.ToDateTime(txtData.Text));
+                pnlPrincipal.Enabled = true;
+                pnlPesquisaQuest.Visible = true;
+                pnlDataValidade.Visible = false;
+                txtData.Text = "";
+            }
+            else
+            {
+                data = txtData.Text;
+                pnlDataValidade.Visible = false;
+                pnlPesquisaUser.Visible = true;
+                txtUser.Text = "";
+            }
         }
     }
 }

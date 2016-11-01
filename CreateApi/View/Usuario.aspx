@@ -8,7 +8,14 @@
     function goBack()
     {
         window.history.back();
-    }     
+    }
+    function data()
+    {
+        var data;
+        do {
+            data = prompt("digite uma data valida:");
+        } while (data == null);
+    }
     </script> 
 
     <title></title>
