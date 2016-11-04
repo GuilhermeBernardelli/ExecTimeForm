@@ -49,6 +49,15 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Label lblTipo;
         
         /// <summary>
+        /// chkSelecionados control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList chkSelecionados;
+        
+        /// <summary>
         /// btnInclude control.
         /// </summary>
         /// <remarks>
@@ -112,6 +121,15 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Button btnUserQuest;
         
         /// <summary>
+        /// btnAdcUsuario control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAdcUsuario;
+        
+        /// <summary>
         /// pnlPesquisaUser control.
         /// </summary>
         /// <remarks>
@@ -157,13 +175,13 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.RadioButtonList rblUser;
         
         /// <summary>
-        /// btnIncluir control.
+        /// pnlVoltaUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnIncluir;
+        protected global::System.Web.UI.WebControls.Panel pnlVoltaUser;
         
         /// <summary>
         /// btnVoltaUser control.
@@ -220,13 +238,13 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.RadioButtonList rblQuest;
         
         /// <summary>
-        /// btnIncluirQuest control.
+        /// pnlVoltaQuest control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnIncluirQuest;
+        protected global::System.Web.UI.WebControls.Panel pnlVoltaQuest;
         
         /// <summary>
         /// btnVoltaQuest control.
@@ -236,5 +254,95 @@ namespace CreateApi.View {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnVoltaQuest;
+        
+        /// <summary>
+        /// pnlDataValidade control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDataValidade;
+        
+        /// <summary>
+        /// txtData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtData;
+        
+        /// <summary>
+        /// btnData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnData;
+        
+        /// <summary>
+        /// pnlUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlUser;
+        
+        /// <summary>
+        /// lblAvisoUsuario control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAvisoUsuario;
+        
+        /// <summary>
+        /// txtNomeCompleto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNomeCompleto;
+        
+        /// <summary>
+        /// txtRegistro control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRegistro;
+        
+        /// <summary>
+        /// rblPerfil control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList rblPerfil;
+        
+        /// <summary>
+        /// btnSalvaUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSalvaUser;
+        
+        /// <summary>
+        /// btnCancelaUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelaUser;
     }
 }

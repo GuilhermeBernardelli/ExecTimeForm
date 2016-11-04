@@ -18,7 +18,7 @@ namespace RenderApi.View
         static List<Perguntas> perg;
         static List<Respostas> resp;
         static Usuarios user;
-        static Renderizar render;
+        static Renderizar render; 
         static Prenchimentos valores = new Prenchimentos();
 
         static RadioButtonList radioResposta;

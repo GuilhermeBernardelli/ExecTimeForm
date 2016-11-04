@@ -46,6 +46,26 @@ namespace CreateApi.Model
             entityModel.Respostas.Remove(resposta);
         }
 
+        public void salvarNovoRender(Renderizar render)
+        {
+            entityModel.Renderizar.Add(render);
+        }
+                
+        public void excluirDadosRender(Renderizar render)
+        {
+            entityModel.Renderizar.Remove(render);
+        }
+
+        public void salvarNovoUsuario(Usuarios usuario)
+        {
+            entityModel.Usuarios.Add(usuario);
+        }
+
+        public void excluirUsuario(Usuarios usuario)
+        {
+            entityModel.Usuarios.Remove(usuario);
+        }        
+
         /*
          * Pesquisa Questionario
          */
@@ -61,7 +81,7 @@ namespace CreateApi.Model
         public Questionarios pesquisaQuestionarioPorNome(string valor)
         {
             return (from questionario in entityModel.Questionarios
-                    where (questionario.nome.Contains(valor))
+                    where (questionario.nome.Equals(valor))
                     select questionario).SingleOrDefault();
         }
 
@@ -163,10 +183,18 @@ namespace CreateApi.Model
          * Pesquisa de usuário
          */
         public List<Usuarios> pesquisaGeralUsers(string valor)
+        {         
+            
+                return (from usuario in entityModel.Usuarios
+                        where (usuario.nome.Contains(valor))
+                        select usuario).ToList();
+            
+        }
+
+        public List<Usuarios> pesquisaGeralUserReg(int valor)
         {
             return (from usuario in entityModel.Usuarios
-                    where (usuario.nome.Contains(valor))
-                    || (usuario.registro == Convert.ToInt32(valor))
+                    where (usuario.registro == (valor))
                     select usuario).ToList();
         }
 
@@ -183,5 +211,11 @@ namespace CreateApi.Model
                     select usuario).SingleOrDefault();
         }
 
+        public Usuarios pesquisaUsuarioNome(string valor)
+        {
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.nome.Equals(valor))
+                    select usuario).SingleOrDefault();
+        }
     }
 }
