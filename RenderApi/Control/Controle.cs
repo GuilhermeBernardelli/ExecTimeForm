@@ -175,6 +175,20 @@ namespace RenderApi.Control
         /*
         * Pesquisa de Usuários
         */
+        public List<Usuarios> pesquisaGeralUsuarios(string valor)
+        {
+            if (valor.All(char.IsDigit))
+            {
+                int pesquisa = Convert.ToInt32(valor);
+                return dbRepository.pesquisaGeralUserReg(pesquisa);
+            }
+            else
+            {
+                string pesquisa = valor;
+                return dbRepository.pesquisaGeralUsers(pesquisa);
+            }
+        }
+
         public List<Usuarios> pesquisaUser()
         {
             return dbRepository.pesquisaTodosUsers();
@@ -187,6 +201,23 @@ namespace RenderApi.Control
             return dbRepository.pesquisaUsuarioReg(pesquisa);
         }
 
+        public Usuarios pesquisaUsuarioNomeCompleto(string valor)
+        {
+            string pesquisa = valor;
+
+            return dbRepository.pesquisaUsuarioNome(pesquisa);
+        }
+
+        public void salvarUsuario(Usuarios usuario)
+        {
+            dbRepository.salvarNovoUsuario(usuario);
+        }
+
+        public void excluirUsuario(Usuarios usuario)
+        {
+            dbRepository.excluirUsuario(usuario);
+        }
+       
         /*
         * Pesquisa de Renderização
         */
@@ -205,6 +236,15 @@ namespace RenderApi.Control
 
             return dbRepository.pesquisaRenderizarId_User(pesquisa, pesquisaUser);
         }
+
+        public void excluirRenderizar(Renderizar render)
+        {
+            dbRepository.excluirRenderizar(render);
+        }
+
+        /*
+         * Pesquisa de preenchimento
+         */
 
         public void salvarPreenchimento(Prenchimentos preenchimento)
         {
@@ -225,20 +265,28 @@ namespace RenderApi.Control
             return dbRepository.pesquisaPreenchimentoRenderUser(render, user);
         }
 
-        public Prenchimentos pesquisaPreenchimento_perg_render(int pergunta, int render_id)
-        {
-            int perg = pergunta;
-            int render = render_id;
-            
-            return dbRepository.pesquisaPreenchimentoRender(perg, render);
-        }
-
         public Prenchimentos pesquisaPreenchimentoValor(string selectedValue, int id)
         {
             string pesquisa = selectedValue;
             int render = id;
 
             return dbRepository.pesquisaPreenchimentoValorResp(pesquisa , render);
+        }
+
+        public Prenchimentos pesquisaPreenchimentoUserName(string resposta, string usuario)
+        {
+            string pesquisa = resposta;
+            string user = usuario;
+
+            return dbRepository.pesquisaPreenchimentoNome(pesquisa, user);
+        }
+
+        public Prenchimentos pesquisaPreenchimento_perg_userNome(int idPergunta, string usuario)
+        {
+            int pesquisa = idPergunta;
+            string user = usuario;
+
+            return dbRepository.pesquisaPreenchimentoIdPerg_Nome(pesquisa, user);
         }
     }
 }

@@ -200,16 +200,6 @@ namespace CreateApi.Control
             return dbRepository.pesquisaUsuarioNome(pesquisa);
         }
 
-        public void salvarRender(Renderizar render)
-        {
-            dbRepository.salvarNovoRender(render);
-        }
-
-        public void excluirRender(Renderizar render)
-        {
-            dbRepository.excluirDadosRender(render);
-        }
-
         public void salvarUsuario(Usuarios usuario)
         {
            dbRepository.salvarNovoUsuario(usuario);
@@ -218,6 +208,20 @@ namespace CreateApi.Control
         public void excluirUsuario(Usuarios usuario)
         {
             dbRepository.excluirUsuario(usuario);
+        }
+
+        /*
+         * Pesquisa Render
+         */
+
+        public void salvarRender(Renderizar render)
+        {
+            dbRepository.salvarNovoRender(render);
+        }
+
+        public void excluirRender(Renderizar render)
+        {
+            dbRepository.excluirDadosRender(render);
         }
     }
 }
