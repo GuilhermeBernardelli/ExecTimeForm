@@ -31,15 +31,6 @@ namespace RenderApi.View {
         protected global::System.Web.UI.WebControls.Label lblMensagem;
         
         /// <summary>
-        /// lblAlerta control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAlerta;
-        
-        /// <summary>
         /// txtRegistro control.
         /// </summary>
         /// <remarks>
@@ -58,6 +49,15 @@ namespace RenderApi.View {
         protected global::System.Web.UI.WebControls.TextBox txtSenha;
         
         /// <summary>
+        /// lblAlerta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAlerta;
+        
+        /// <summary>
         /// btnLogin control.
         /// </summary>
         /// <remarks>
@@ -74,5 +74,14 @@ namespace RenderApi.View {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCAC;
+        
+        /// <summary>
+        /// btnPublico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPublico;
     }
 }

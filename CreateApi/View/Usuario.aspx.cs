@@ -32,7 +32,43 @@ namespace CreateApi.View
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                //cria objeto da novo da base de dados
+                Usuarios user = new Usuarios();
+                //verifica se o login foi feito por usuário + senha na página Index.aspx
+                if (Session["user"].ToString() == "")
+                {
+                    //Variaveis de sessão recebidas no postback url
+                    string registro = Convert.ToString(Request.Form["hddRegFunc"]);
+                    string nome = Convert.ToString(Request.Form["hddNomeFunc"]);
+                    string perfil = Convert.ToString(Request.Form["hddEnumPerfil"]);
 
+                    //verifica a pré existencia do usuário na base de dados
+                    if (controle.pesquisaUsuarioReg(Convert.ToInt32(registro)) == null)
+                    { 
+                        //Adiciona o usuário do acesso via postback url a base de dados 
+                        controle.salvarUsuario(user);
+                        user.nome = nome;
+                        user.registro = Convert.ToInt32(registro);
+                        user.perfil = Convert.ToInt32(perfil);
+                        //salva a adição de usuário
+                        controle.atualizarDados();
+                    }
+                }
+                //busca na base de dados o usuário no caso de login por usuário + senha
+                else
+                {
+                    //busca na base de dados por meio de variavel de sessão
+                    int registro = Convert.ToInt32(Session["user"]);
+                    user = controle.pesquisaUsuarioReg(registro);
+                }
+                //verifica se o perfil do usuário possui os privilégios para a utilização do módulo
+                if (user.perfil != 1) //perfil 1 = administrador da aplicação
+                {
+                    Response.Redirect("Index.aspx");
+                }
+            }
         }
         //função para reestabelecer os controles a condição inicial, não altera os panels
         public void limpaFunction()
@@ -378,8 +414,10 @@ namespace CreateApi.View
         protected void btnData_Click(object sender, EventArgs e)
         {
             if (tipo.Equals("user"))
-            {                
+            {  
+                //se o metodo de inclusão for questionarios ao usuário adiciona a cada novo questionário uma data referente              
                 dataLista.Add(Convert.ToDateTime(txtData.Text));
+                //modifica a visibilidade dos controles da view
                 pnlPrincipal.Enabled = true;
                 pnlPesquisaQuest.Visible = true;
                 pnlDataValidade.Visible = false;
@@ -387,19 +425,20 @@ namespace CreateApi.View
             }
             else
             {
+                //modifica a visibilidade dos controles da view
                 data = txtData.Text;
                 pnlDataValidade.Visible = false;
                 pnlPesquisaUser.Visible = true;
                 txtUser.Text = "";
             }
         }
-
-       
-
+               
+        //função incluida para a adição de usuários a partir da interface
         protected void btnSalvaUser_Click(object sender, EventArgs e)
         {
             try
             {
+                //cria e salva na base objeto do tipo usuário
                 Usuarios usuario = new Usuarios();
                 controle.salvarUsuario(usuario);
                 if (!txtNomeCompleto.Text.Equals(""))
@@ -412,6 +451,7 @@ namespace CreateApi.View
                             usuario.registro = Convert.ToInt32(txtRegistro.Text);
                             usuario.perfil = Convert.ToInt32(rblPerfil.SelectedValue);
                             controle.atualizarDados();
+                            limpaFunction();
                         }
                         else
                         {
@@ -433,7 +473,7 @@ namespace CreateApi.View
             }
             catch (DbUpdateException ex)
             {
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaDb", "alert('Não foi possivel criar o usuário, tente novamente')",true);
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaDb", "alert('Não foi possivel criar o usuário, erro:" +ex.ToString() + "')",true);
                 limpaFunction();
             }
         }

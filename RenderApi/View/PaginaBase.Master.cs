@@ -11,7 +11,8 @@ namespace RenderApi.View
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //Atualmente a master é utilizada comente como layout base para a aplicação
+            //não possuindo código a ser executado
         }
     }
 }

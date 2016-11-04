@@ -59,6 +59,21 @@ namespace RenderApi.Model
             entityModel.Prenchimentos.Add(preenchimento);
         }
 
+        public void salvarNovoUsuario(Usuarios usuario)
+        {
+            entityModel.Usuarios.Add(usuario);
+        }
+
+        public void excluirUsuario(Usuarios usuario)
+        {
+            entityModel.Usuarios.Remove(usuario);
+        }
+
+        public void excluirRenderizar(Renderizar render)
+        {
+            entityModel.Renderizar.Remove(render);
+        }
+
         /*
          * Pesquisa Questionario
          */
@@ -180,12 +195,36 @@ namespace RenderApi.Model
             return (from usuario in entityModel.Usuarios
                     select usuario).ToList();
         }
-                
+
 
         public Usuarios pesquisaUsuarioReg(int valor)
         {
             return (from usuario in entityModel.Usuarios
                     where (usuario.registro == (valor))
+                    select usuario).SingleOrDefault();
+        }
+
+        public List<Usuarios> pesquisaGeralUsers(string valor)
+        {
+
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.nome.Contains(valor))
+                    select usuario).ToList();
+
+        }   
+
+        public List<Usuarios> pesquisaGeralUserReg(int valor)
+        {
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.registro == (valor))
+                    select usuario).ToList();
+        }
+                
+
+        public Usuarios pesquisaUsuarioNome(string valor)
+        {
+            return (from usuario in entityModel.Usuarios
+                    where (usuario.nome.Equals(valor))
                     select usuario).SingleOrDefault();
         }
 
@@ -205,15 +244,29 @@ namespace RenderApi.Model
         {            
             return (from renderiza in entityModel.Renderizar
                     where (renderiza.id_questionario == valor)
-                    && (renderiza.id_usuario == user)
+                    && (renderiza.id_usuario == user || 
+                    renderiza.id_usuario == 0)
                     select renderiza).SingleOrDefault();
         }
+
+        
+        /*
+         * Pesquisas de Preenchimento
+         */
 
         public Prenchimentos pesquisaPreenchimentoValorResp(string pesquisa, int render)
         {
             return (from preenchimento in entityModel.Prenchimentos
                     where (preenchimento.valor_resposta.Equals(pesquisa))
                     && (preenchimento.id_renderizar == render)
+                    select preenchimento).SingleOrDefault();
+        }
+
+        public Prenchimentos pesquisaPreenchimentoIdPerg_Nome(int pesquisa, string user)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.id_pergunta == pesquisa)
+                    && (preenchimento.usuario.Equals(user))
                     select preenchimento).SingleOrDefault();
         }
 
@@ -237,6 +290,13 @@ namespace RenderApi.Model
             return (from preenchimento in entityModel.Prenchimentos
                     where (preenchimento.id_pergunta == perg)
                     && (preenchimento.id_renderizar == render)
+                    select preenchimento).SingleOrDefault();
+        }
+        public Prenchimentos pesquisaPreenchimentoNome(string pesquisa, string user)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.valor_resposta.Equals(pesquisa))
+                    && (preenchimento.usuario.Equals(user))
                     select preenchimento).SingleOrDefault();
         }
     }
