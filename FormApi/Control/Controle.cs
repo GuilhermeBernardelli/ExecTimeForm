@@ -1,11 +1,13 @@
 ﻿using FormApi.Model;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System;
 
 namespace FormApi.Control
 {
     public class Controle: DbContext
     {
+        //Objeto da camada Model
         Repository dbRepository = new Repository();
 
         /*
@@ -175,5 +177,6 @@ namespace FormApi.Control
 
             return dbRepository.pesquisaUsuarioReg(pesquisa);
         }
+
     }
 }

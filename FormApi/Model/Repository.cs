@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FormApi.Model
 {
     public class Repository
     {
+        //Criação objeto das entidades da base de dados
         DbEntities entityModel = new DbEntities();
 
         /*
@@ -108,7 +110,7 @@ namespace FormApi.Model
                     where (pergunta.id == (Id))
                     select pergunta).SingleOrDefault();
         }
-
+       
         /*
          * Pesquisa Resposta
          */
@@ -150,7 +152,7 @@ namespace FormApi.Model
             return (from tipos in entityModel.Tipos
                     select tipos).ToList();
         }
-
+               
         public Tipos pesquisaValorTipo(string valor)
         {
             return (from tipos in entityModel.Tipos

@@ -41,20 +41,30 @@ namespace CreateApi.Model
             entityModel.Respostas.Add(resposta);
         }
 
+        public void excluirDadosResposta(Respostas resposta)
+        {
+            entityModel.Respostas.Remove(resposta);
+        }
+
         public void salvarNovoRender(Renderizar render)
         {
             entityModel.Renderizar.Add(render);
         }
-
+                
         public void excluirDadosRender(Renderizar render)
         {
             entityModel.Renderizar.Remove(render);
         }
 
-        public void excluirDadosResposta(Respostas resposta)
+        public void salvarNovoUsuario(Usuarios usuario)
         {
-            entityModel.Respostas.Remove(resposta);
+            entityModel.Usuarios.Add(usuario);
         }
+
+        public void excluirUsuario(Usuarios usuario)
+        {
+            entityModel.Usuarios.Remove(usuario);
+        }        
 
         /*
          * Pesquisa Questionario

@@ -209,5 +209,15 @@ namespace CreateApi.Control
         {
             dbRepository.excluirDadosRender(render);
         }
+
+        public void salvarUsuario(Usuarios usuario)
+        {
+           dbRepository.salvarNovoUsuario(usuario);
+        }
+
+        public void excluirUsuario(Usuarios usuario)
+        {
+            dbRepository.excluirUsuario(usuario);
+        }
     }
 }

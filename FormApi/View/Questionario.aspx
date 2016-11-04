@@ -145,7 +145,7 @@ Número - o usuário deverá digitar um número valido.">
             <br />
             <asp:Button ID="btnOpção" runat="server" CssClass="auto-style9" Font-Bold="True" OnClick="btnOpção_Click" Text="Adicionar Opção" Width="120px" />
             <asp:Button ID="btnCancOpção" runat="server" CssClass="auto-style11" Font-Bold="True" Text="Cancelar" Width="120px" OnClick="btnCancOpção_Click" />
-            <asp:Button ID="btnAdcPergunta" runat="server" CssClass="auto-style2" Font-Bold="True" Text="Salvar Pergunta" Width="120px" OnClick="btnAdcPergunta_Click" />
+            <asp:Button ID="btnSalvarPergunta" runat="server" CssClass="auto-style2" Font-Bold="True" Text="Salvar Pergunta" Width="120px" OnClick="btnAdcPergunta_Click" />
         </asp:Panel>
         <asp:Panel ID="pnlOpções" runat="server" Height="70px" Width="650px" Visible="False">
             <asp:RadioButtonList ID="rblOpções" runat="server" OnSelectedIndexChanged="rblOpções_SelectedIndexChanged" AutoPostBack="True" CssClass="auto-style14">
