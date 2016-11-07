@@ -34,40 +34,45 @@ namespace CreateApi.View
         {
             if (!IsPostBack)
             {
-                //cria objeto da novo da base de dados
-                Usuarios user = new Usuarios();
-                //verifica se o login foi feito por usuário + senha na página Index.aspx
-                if (Session["user"].ToString() == "")
+                try
                 {
-                    //Variaveis de sessão recebidas no postback url
-                    string registro = Convert.ToString(Request.Form["hddRegFunc"]);
-                    string nome = Convert.ToString(Request.Form["hddNomeFunc"]);
-                    string perfil = Convert.ToString(Request.Form["hddEnumPerfil"]);
+                    //cria objeto da novo da base de dados
+                    Usuarios user = new Usuarios();
+                    //verifica se o login foi feito por usuário + senha na página Index.aspx
+                    if (Session["user"].ToString() == "")
+                    {
+                        //Variaveis de sessão recebidas no postback url
+                        string registro = Convert.ToString(Request.Form["hddRegFunc"]);
+                        string nome = Convert.ToString(Request.Form["hddNomeFunc"]);
+                        string perfil = Convert.ToString(Request.Form["hddEnumPerfil"]);
 
-                    //verifica a pré existencia do usuário na base de dados
-                    if (controle.pesquisaUsuarioReg(Convert.ToInt32(registro)) == null)
-                    { 
-                        //Adiciona o usuário do acesso via postback url a base de dados 
-                        controle.salvarUsuario(user);
-                        user.nome = nome;
-                        user.registro = Convert.ToInt32(registro);
-                        user.perfil = Convert.ToInt32(perfil);
-                        //salva a adição de usuário
-                        controle.atualizarDados();
+                        //verifica a pré existencia do usuário na base de dados
+                        if (controle.pesquisaUsuarioReg(Convert.ToInt32(registro)) == null)
+                        {
+                            //Adiciona o usuário do acesso via postback url a base de dados 
+                            controle.salvarUsuario(user);
+                            user.nome = nome;
+                            user.registro = Convert.ToInt32(registro);
+                            user.perfil = Convert.ToInt32(perfil);
+                            //salva a adição de usuário
+                            controle.atualizarDados();
+                        }
+                    }
+                    //busca na base de dados o usuário no caso de login por usuário + senha
+                    else
+                    {
+                        //busca na base de dados por meio de variavel de sessão
+                        int registro = Convert.ToInt32(Session["user"]);
+                        user = controle.pesquisaUsuarioReg(registro);
+                    }
+                    //verifica se o perfil do usuário possui os privilégios para a utilização do módulo
+                    if (user.perfil != 1) //perfil 1 = administrador da aplicação
+                    {
+                        Response.Redirect("Index.aspx");
                     }
                 }
-                //busca na base de dados o usuário no caso de login por usuário + senha
-                else
-                {
-                    //busca na base de dados por meio de variavel de sessão
-                    int registro = Convert.ToInt32(Session["user"]);
-                    user = controle.pesquisaUsuarioReg(registro);
-                }
-                //verifica se o perfil do usuário possui os privilégios para a utilização do módulo
-                if (user.perfil != 1) //perfil 1 = administrador da aplicação
-                {
-                    Response.Redirect("Index.aspx");
-                }
+                //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+                catch { }
             }
         }
         //função para reestabelecer os controles a condição inicial, não altera os panels
@@ -117,194 +122,214 @@ namespace CreateApi.View
         //função para busca de questionários
         protected void btnPesqQuest_Click(object sender, EventArgs e)
         {
-            //verifica a existência de parametro de busca
-            if (txtQuest.Text.Equals(""))
+            try
             {
-                lblAvisoQuest.Visible = true;
-                lblAvisoQuest.Text = "* O campo pesquisa não pode ser vazio";
-            }
-            //havendo parametros de busca executa as instruções a seguir
-            else
-            {
-                lblAvisoQuest.Visible = false;
-                //adiciona a variavel tipo Lista Questionarios os questionários que contenham o parametro de busca
-                LQuest = controle.pesquisaGeralQuestionario(txtQuest.Text);
-                //verifica se houveram questionários que atenderam ao parametro de busca
-                if (LQuest.Count == 0)
+                //verifica a existência de parametro de busca
+                if (txtQuest.Text.Equals(""))
                 {
                     lblAvisoQuest.Visible = true;
-                    lblAvisoQuest.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
+                    lblAvisoQuest.Text = "* O campo pesquisa não pode ser vazio";
                 }
-                //else if parametro com mais de X resultados
-
-                /*Caso ao menos um questionário atenda ao parametro de busca, 
-                * e não existam mais de X questionários que atendem este parametro
-                * executa as instruções a seguir */
+                //havendo parametros de busca executa as instruções a seguir
                 else
                 {
-                    //carrega a radio button list com os resultados da busca
-                    rblQuest.Visible = true;
-                    rblQuest.DataSource = LQuest;
-                    rblQuest.DataTextField = "nome";
-                    rblQuest.DataValueField = "id";
-                    rblQuest.DataBind();
-                    for (int i = 0; i < LQuest.Count; i++)
+                    lblAvisoQuest.Visible = false;
+                    //adiciona a variavel tipo Lista Questionarios os questionários que contenham o parametro de busca
+                    LQuest = controle.pesquisaGeralQuestionario(txtQuest.Text);
+                    //verifica se houveram questionários que atenderam ao parametro de busca
+                    if (LQuest.Count == 0)
                     {
-                        string opção = LQuest[i].nome;
-                        rblQuest.Items[i].Text = opção;
+                        lblAvisoQuest.Visible = true;
+                        lblAvisoQuest.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
+                    }
+                    //else if parametro com mais de X resultados
+
+                    /*Caso ao menos um questionário atenda ao parametro de busca, 
+                    * e não existam mais de X questionários que atendem este parametro
+                    * executa as instruções a seguir */
+                    else
+                    {
+                        //carrega a radio button list com os resultados da busca
+                        rblQuest.Visible = true;
+                        rblQuest.DataSource = LQuest;
+                        rblQuest.DataTextField = "nome";
+                        rblQuest.DataValueField = "id";
+                        rblQuest.DataBind();
+                        for (int i = 0; i < LQuest.Count; i++)
+                        {
+                            string opção = LQuest[i].nome;
+                            rblQuest.Items[i].Text = opção;
+                        }
                     }
                 }
             }
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
         //função para a busca de usuários
         protected void btnPesqUser_Click(object sender, EventArgs e)
         {
-            //verifica a se existe algum parametro de busca
-            if (txtUser.Text.Equals(""))
+            try
             {
-                lblAvisoUser.Visible = true;
-                lblAvisoUser.Text = "* O campo pesquisa não pode ser vazio";
-            }
-            //havendo parametros de busca executa as instruções a seguir
-            else
-            {
-                lblAvisoUser.Visible = false;
-                //pesquisa a base de usuários e retorna aqueles que atendam o parametro de busca
-                LUser = controle.pesquisaGeralUsuarios(txtUser.Text);
-                //verifica se a pesquisa retornou vazia
-                if (LUser.Count == 0)
+                //verifica a se existe algum parametro de busca
+                if (txtUser.Text.Equals(""))
                 {
                     lblAvisoUser.Visible = true;
-                    lblAvisoUser.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
+                    lblAvisoUser.Text = "* O campo pesquisa não pode ser vazio";
                 }
-                //else if parametro com mais de X resultados
-
-                /*Caso ao menos um usuário atenda ao parametro de busca, 
-                * e não existam mais de X usuários que atendem este parametro
-                * executa as instruções a seguir */
+                //havendo parametros de busca executa as instruções a seguir
                 else
                 {
-                    rblUser.Visible = true;
-                    rblUser.DataSource = LUser;
-                    rblUser.DataTextField = "nome";
-                    rblUser.DataValueField = "id";
-                    rblUser.DataBind();
-                    for (int i = 0; i < LUser.Count; i++)
+                    lblAvisoUser.Visible = false;
+                    //pesquisa a base de usuários e retorna aqueles que atendam o parametro de busca
+                    LUser = controle.pesquisaGeralUsuarios(txtUser.Text);
+                    //verifica se a pesquisa retornou vazia
+                    if (LUser.Count == 0)
                     {
-                        string opção = LUser[i].nome;
-                        rblUser.Items[i].Text = opção;
+                        lblAvisoUser.Visible = true;
+                        lblAvisoUser.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
+                    }
+                    //else if parametro com mais de X resultados
+
+                    /*Caso ao menos um usuário atenda ao parametro de busca, 
+                    * e não existam mais de X usuários que atendem este parametro
+                    * executa as instruções a seguir */
+                    else
+                    {
+                        rblUser.Visible = true;
+                        rblUser.DataSource = LUser;
+                        rblUser.DataTextField = "nome";
+                        rblUser.DataValueField = "id";
+                        rblUser.DataBind();
+                        for (int i = 0; i < LUser.Count; i++)
+                        {
+                            string opção = LUser[i].nome;
+                            rblUser.Items[i].Text = opção;
+                        }
                     }
                 }
             }
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
 
         protected void rblQuest_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //verifica se já houve a seleção de tipo de pesquisa
-            if (tipo == null)
+            try
             {
-                //modifica os controles da view para a inclusão de usuários ao questionário
-                btnSalvar.Enabled = false;
-                lblTitulo.Text = "Inclusão de usuários ao questionário";
-                lblTipo.Visible = true;
-                lblTipo.Text = rblQuest.SelectedItem.Text + ":";
-                pnlPesquisaQuest.Visible = false;
-                pnlPrincipal.Visible = true;
-                btnAlterar.Text = "Outro Question.";
-                //atribui valor a variavel tipo
-                tipo = "quest";                
-            }
-            //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
-            else
-            {
-                //habilita o botão Salvar Alterações
-                btnSalvar.Enabled = true;
-                for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                //verifica se já houve a seleção de tipo de pesquisa
+                if (tipo == null)
                 {
-                    //verifica na relação dos questionários adicionados ao usuário de existe o questionário selecionado
-                    if (chkSelecionados.Items[i].Equals(rblQuest.SelectedItem))
-                    {
-                        //caso exista atribui valor true a variavel
-                        existe = true;
-                    }
-                }
-                //no caso da variavel existe permanecer como false
-                if (!existe)
-                {
-                    //modifica os conteudos de texto da view
-                    btnVoltaQuest.Text = "Desfazer";
-                    txtQuest.Text = "";
-                    //adiciona a checkbox list de questionários o item selecionado
-                    chkSelecionados.Items.Add(rblQuest.SelectedItem);
-                    //limpa a radio button list de seleção
-                    rblQuest.Items.Clear();
-                    //modifica os controles da view
-                    chkSelecionados.Visible = true;
-                    pnlPrincipal.Enabled = false;
+                    //modifica os controles da view para a inclusão de usuários ao questionário
+                    btnSalvar.Enabled = false;
+                    lblTitulo.Text = "Inclusão de usuários ao questionário";
+                    lblTipo.Visible = true;
+                    lblTipo.Text = rblQuest.SelectedItem.Text + ":";
                     pnlPesquisaQuest.Visible = false;
-                    pnlDataValidade.Visible = true;
+                    pnlPrincipal.Visible = true;
+                    btnAlterar.Text = "Outro Question.";
+                    //atribui valor a variavel tipo
+                    tipo = "quest";
                 }
-                //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
                 {
-                    existe = false;
-                    lblAvisoQuest.Visible = true;
-                    lblAvisoQuest.Text = "Questionário já incluso na lista";
+                    //habilita o botão Salvar Alterações
+                    btnSalvar.Enabled = true;
+                    for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                    {
+                        //verifica na relação dos questionários adicionados ao usuário de existe o questionário selecionado
+                        if (chkSelecionados.Items[i].Equals(rblQuest.SelectedItem))
+                        {
+                            //caso exista atribui valor true a variavel
+                            existe = true;
+                        }
+                    }
+                    //no caso da variavel existe permanecer como false
+                    if (!existe)
+                    {
+                        //modifica os conteudos de texto da view
+                        btnVoltaQuest.Text = "Desfazer";
+                        txtQuest.Text = "";
+                        //adiciona a checkbox list de questionários o item selecionado
+                        chkSelecionados.Items.Add(rblQuest.SelectedItem);
+                        //limpa a radio button list de seleção
+                        rblQuest.Items.Clear();
+                        //modifica os controles da view
+                        chkSelecionados.Visible = true;
+                        pnlPrincipal.Enabled = false;
+                        pnlPesquisaQuest.Visible = false;
+                        pnlDataValidade.Visible = true;
+                    }
+                    //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                    else
+                    {
+                        existe = false;
+                        lblAvisoQuest.Visible = true;
+                        lblAvisoQuest.Text = "Questionário já incluso na lista";
+                    }
                 }
             }
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
         //função para inclusão de questionários ao usuário
         protected void rblUser_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //verifica se já houve a seleção de tipo de pesquisa
-            if (tipo == null)
+            try
             {
-                //modifica os controles da view para a inclusão de questionários ao usuário
-                btnSalvar.Enabled = false;
-                lblTitulo.Text = "Inclusão de questionários ao usuário";
-                lblTipo.Visible = true;
-                lblTipo.Text = rblUser.SelectedItem.Text + ":";
-                pnlPesquisaUser.Visible = false;
-                pnlPrincipal.Visible = true;
-                btnAlterar.Text = "Outro Usuário";
-                //atribui valor a variavel tipo
-                tipo = "user";
-            }
-            //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
-            else
-            {
-                //habilita o botão Salvar Alterações
-                btnSalvar.Enabled = true;
-                for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                //verifica se já houve a seleção de tipo de pesquisa
+                if (tipo == null)
                 {
-                    //verifica na relação dos usuários adicionados ao questionário se existe o usuário selecionado
-                    if (chkSelecionados.Items[i].Equals(rblUser.SelectedItem))
-                    {
-                        //caso exista atribui valor true a variavel
-                        existe = true;
-                    }
+                    //modifica os controles da view para a inclusão de questionários ao usuário
+                    btnSalvar.Enabled = false;
+                    lblTitulo.Text = "Inclusão de questionários ao usuário";
+                    lblTipo.Visible = true;
+                    lblTipo.Text = rblUser.SelectedItem.Text + ":";
+                    pnlPesquisaUser.Visible = false;
+                    pnlPrincipal.Visible = true;
+                    btnAlterar.Text = "Outro Usuário";
+                    //atribui valor a variavel tipo
+                    tipo = "user";
                 }
-                //no caso da variavel existe permanecer como false
-                if (!existe)
-                {
-                    //modifica os conteudos de texto da view
-                    txtUser.Text = "";
-                    //adiciona a checkbox list de usuários o item selecionado
-                    chkSelecionados.Items.Add(rblUser.SelectedItem);
-                    //limpa a radio button list de seleção
-                    rblUser.Items.Clear();
-                    //modifica os controles da view
-                    chkSelecionados.Visible = true;
-                    btnVoltaUser.Text = "Desfazer";
-                }
-                //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
                 {
-                    existe = false;
-                    lblAvisoUser.Visible = true;
-                    lblAvisoUser.Text = "Usuário já incluso na lista";
+                    //habilita o botão Salvar Alterações
+                    btnSalvar.Enabled = true;
+                    for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                    {
+                        //verifica na relação dos usuários adicionados ao questionário se existe o usuário selecionado
+                        if (chkSelecionados.Items[i].Equals(rblUser.SelectedItem))
+                        {
+                            //caso exista atribui valor true a variavel
+                            existe = true;
+                        }
+                    }
+                    //no caso da variavel existe permanecer como false
+                    if (!existe)
+                    {
+                        //modifica os conteudos de texto da view
+                        txtUser.Text = "";
+                        //adiciona a checkbox list de usuários o item selecionado
+                        chkSelecionados.Items.Add(rblUser.SelectedItem);
+                        //limpa a radio button list de seleção
+                        rblUser.Items.Clear();
+                        //modifica os controles da view
+                        chkSelecionados.Visible = true;
+                        btnVoltaUser.Text = "Desfazer";
+                    }
+                    //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                    else
+                    {
+                        existe = false;
+                        lblAvisoUser.Visible = true;
+                        lblAvisoUser.Text = "Usuário já incluso na lista";
+                    }
                 }
             }
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
         //função para realizar inclusões no item selecionado
         protected void btnInclude_Click(object sender, EventArgs e)
@@ -363,74 +388,84 @@ namespace CreateApi.View
         //função para salvar alterações realizadas
         protected void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (tipo.Equals("quest"))
+            try
             {
-                //cria uma lista do tipo usuários
-                LUser = new List<Usuarios>();
-                foreach (ListItem value in chkSelecionados.Items)
+                if (tipo.Equals("quest"))
                 {
-                    //para cada elemento na checkbutton list adiciona um novo usuário
-                    LUser.Add(controle.pesquisaUsuarioNomeCompleto(value.Text));
+                    //cria uma lista do tipo usuários
+                    LUser = new List<Usuarios>();
+                    foreach (ListItem value in chkSelecionados.Items)
+                    {
+                        //para cada elemento na checkbutton list adiciona um novo usuário
+                        LUser.Add(controle.pesquisaUsuarioNomeCompleto(value.Text));
+                    }
+                    foreach (Usuarios value in LUser)
+                    {
+                        //para cada usuário adicionado a lista, inclui os dados na base de dados do modulo de renderização
+                        render = new Renderizar();
+                        controle.salvarRender(render);
+                        render.id_questionario = Convert.ToInt32(rblQuest.SelectedValue);
+                        render.data_renderizado = DateTime.Now;
+                        render.id_usuario = value.id;
+                        //utiliza como parametro a data da variável data
+                        render.data_validade = Convert.ToDateTime(data);
+                        controle.atualizarDados();
+                    }
                 }
-                foreach (Usuarios value in LUser)
+                else//tipo.Equals("user")
                 {
-                    //para cada usuário adicionado a lista, inclui os dados na base de dados do modulo de renderização
-                    render = new Renderizar();
-                    controle.salvarRender(render);
-                    render.id_questionario = Convert.ToInt32(rblQuest.SelectedValue);
-                    render.data_renderizado = DateTime.Now;
-                    render.id_usuario = value.id;
-                    //utiliza como parametro a data da variável data
-                    render.data_validade = Convert.ToDateTime(data);
-                    controle.atualizarDados();
+                    //cria uma lista do tipo questionários
+                    LQuest = new List<Questionarios>();
+                    int i = 0;
+                    foreach (ListItem value in chkSelecionados.Items)
+                    {
+                        //para cada elemento na checkbutton list adiciona um novo questionário
+                        LQuest.Add(controle.pesquisaQuestionarioNome(value.Text));
+                    }
+                    foreach (Questionarios value in LQuest)
+                    {
+                        //para cada questionário adicionado a lista, inclui os dados na base de dados do modulo de renderização
+                        render = new Renderizar();
+                        controle.salvarRender(render);
+                        render.id_usuario = Convert.ToInt32(rblUser.SelectedValue);
+                        render.data_renderizado = DateTime.Now;
+                        render.id_questionario = value.id;
+                        //utiliza como parametro a lista de datas                
+                        render.data_validade = dataLista[i++];
+                        controle.atualizarDados();
+                    }
                 }
+                Response.Redirect("Usuario.aspx");
             }
-            else//tipo.Equals("user")
-            {
-                //cria uma lista do tipo questionários
-                LQuest = new List<Questionarios>();
-                int i = 0;
-                foreach (ListItem value in chkSelecionados.Items)
-                {
-                    //para cada elemento na checkbutton list adiciona um novo questionário
-                    LQuest.Add(controle.pesquisaQuestionarioNome(value.Text));
-                }
-                foreach (Questionarios value in LQuest)
-                {
-                    //para cada questionário adicionado a lista, inclui os dados na base de dados do modulo de renderização
-                    render = new Renderizar();
-                    controle.salvarRender(render);
-                    render.id_usuario = Convert.ToInt32(rblUser.SelectedValue);
-                    render.data_renderizado = DateTime.Now;
-                    render.id_questionario = value.id;    
-                    //utiliza como parametro a lista de datas                
-                    render.data_validade = dataLista[i++];
-                    controle.atualizarDados();
-                }
-            }
-            Response.Redirect("Usuario.aspx");
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
         //interface para o tratamento do objeto data
         protected void btnData_Click(object sender, EventArgs e)
         {
-            if (tipo.Equals("user"))
-            {  
-                //se o metodo de inclusão for questionarios ao usuário adiciona a cada novo questionário uma data referente              
-                dataLista.Add(Convert.ToDateTime(txtData.Text));
-                //modifica a visibilidade dos controles da view
-                pnlPrincipal.Enabled = true;
-                pnlPesquisaQuest.Visible = true;
-                pnlDataValidade.Visible = false;
-                txtData.Text = "";
-            }
-            else
+            try
             {
-                //modifica a visibilidade dos controles da view
-                data = txtData.Text;
-                pnlDataValidade.Visible = false;
-                pnlPesquisaUser.Visible = true;
-                txtUser.Text = "";
+                if (tipo.Equals("user"))
+                {
+                    //se o metodo de inclusão for questionarios ao usuário adiciona a cada novo questionário uma data referente              
+                    dataLista.Add(Convert.ToDateTime(txtData.Text));
+                    //modifica a visibilidade dos controles da view
+                    pnlPrincipal.Enabled = true;
+                    pnlPesquisaQuest.Visible = true;
+                    pnlDataValidade.Visible = false;
+                    txtData.Text = "";
+                }
+                else
+                {
+                    //modifica a visibilidade dos controles da view
+                    data = txtData.Text;
+                    pnlDataValidade.Visible = false;
+                    pnlPesquisaUser.Visible = true;
+                    txtUser.Text = "";
+                }
             }
+            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+            catch { }
         }
                
         //função incluida para a adição de usuários a partir da interface
@@ -476,6 +511,8 @@ namespace CreateApi.View
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaDb", "alert('Não foi possivel criar o usuário, erro:" +ex.ToString() + "')",true);
                 limpaFunction();
             }
+            //catch genérico para evitar a exibição ao usuário de possíveis erros
+            catch { }
         }
 
         protected void btnCancelaUser_Click(object sender, EventArgs e)
