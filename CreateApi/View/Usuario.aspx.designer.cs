@@ -49,15 +49,6 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Label lblTipo;
         
         /// <summary>
-        /// chkSelecionados control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList chkSelecionados;
-        
-        /// <summary>
         /// btnInclude control.
         /// </summary>
         /// <remarks>
@@ -94,6 +85,24 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Button btnCancela;
         
         /// <summary>
+        /// pnlLista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlLista;
+        
+        /// <summary>
+        /// chkSelecionados control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList chkSelecionados;
+        
+        /// <summary>
         /// pnlMetodo control.
         /// </summary>
         /// <remarks>
@@ -103,13 +112,22 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Panel pnlMetodo;
         
         /// <summary>
-        /// btnQuestUser control.
+        /// btnAdcUsuario control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnQuestUser;
+        protected global::System.Web.UI.WebControls.Button btnAdcUsuario;
+        
+        /// <summary>
+        /// btnAdcQuest control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAdcQuest;
         
         /// <summary>
         /// btnUserQuest control.
@@ -121,13 +139,13 @@ namespace CreateApi.View {
         protected global::System.Web.UI.WebControls.Button btnUserQuest;
         
         /// <summary>
-        /// btnAdcUsuario control.
+        /// btnQuestUser control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAdcUsuario;
+        protected global::System.Web.UI.WebControls.Button btnQuestUser;
         
         /// <summary>
         /// pnlPesquisaUser control.

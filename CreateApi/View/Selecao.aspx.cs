@@ -1,5 +1,5 @@
-﻿using RenderApi.Control;
-using RenderApi.Model;
+﻿using CreateApi.Control;
+using CreateApi.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace RenderApi.View
             {
                 try
                 {
-                    //verifica se o login foi feito por usuário + senha na página Index.aspx
+                    //verifica se o login foi feito por usuário + senha ou login cac na página Index.aspx
                     if (Session["user"].ToString() == "")
                     {
                         //Variaveis de sessão recebidas no postback url
@@ -80,7 +80,7 @@ namespace RenderApi.View
                             if (render != null)
                             {
                                 //localizando exclui esse render do perfil do usuário mantendo somente o acesso público
-                                controle.excluirRenderizar(value);
+                                controle.excluirRender(value);
                                 controle.atualizarDados();
                                 //localizado o id do questionário como público
                                 publico = true;
@@ -125,7 +125,7 @@ namespace RenderApi.View
                     else
                     {
                         lblMensagem.Visible = true;
-                        lblMensagem.Text = "Não existem questionários públicos ou para este usuário";
+                        lblMensagem.Text = "Não existem questionários públicos ou para este usuário em específico";
                     }
                 }
                 //instruções circundadas com try, catch para evitar a exibição de possíveis erros ao usuário

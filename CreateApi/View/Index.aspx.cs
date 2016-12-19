@@ -57,18 +57,25 @@ namespace CreateApi.View
                         txtSenha.Text = "";
                     }
                     //se o usuário existir, mas a senha estiver com o valor NULL na base de dados habilita o panel para cadastro de senha
-                    else if (user.senha == null)
+                    else if (user.senha == null && chkAdministrador.Checked)
                     {
                         //modifica os controles da view 
                         pnlLogin.Visible = false;
                         pnlNovo.Visible = true;
                     }
                     //ações no caso da senha estar correta e o perfil possuir os privilégios para o uso do modulo
-                    else if (user.senha.Equals(txtSenha.Text) && user.perfil == 1)
+                    else if (user.senha.Equals(txtSenha.Text) && user.perfil == 1 && chkAdministrador.Checked)
                     {
                         //cria variavel de sessão com o registro do usuário
                         Session["user"] = registro;
                         Response.Redirect("Usuario.aspx");
+                    }
+                    //ações no caso da senha estar correta e o perfil ser um perfil usuário comum ou um administrador com flag inativo
+                    else if ((user.senha.Equals(txtSenha.Text) && user.perfil != 1) || (user.senha.Equals(txtSenha.Text) && user.perfil == 1 && !chkAdministrador.Checked))
+                    {
+                        //cria variavel de sessão com o registro do usuário
+                        Session["user"] = registro;
+                        Response.Redirect("Selecao.aspx");
                     }
                     //se os padrões não se incluirem em nenhum dos casos exibe as mensagens de usuário e senha inválidos ou ausência de privilégios
                     else
@@ -118,6 +125,14 @@ namespace CreateApi.View
         {
             //restabelece as condições iniciais da page
             Response.Redirect("Index.aspx");
+        }
+
+        protected void btnPublico_Click(object sender, EventArgs e)
+        {
+            //atribui a variavel de sessão o valor do usuário público e chama a interface de seleção
+            int registro = 0;
+            Session["user"] = registro;
+            Response.Redirect("Selecao.aspx");
         }
     }
 }

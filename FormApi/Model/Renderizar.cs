@@ -23,7 +23,6 @@ namespace FormApi.Model
         public int id_questionario { get; set; }
         public Nullable<int> id_usuario { get; set; }
         public System.DateTime data_renderizado { get; set; }
-        public bool publico { get; set; }
         public Nullable<System.DateTime> data_validade { get; set; }
     
         public virtual ICollection<Prenchimentos> Prenchimentos { get; set; }

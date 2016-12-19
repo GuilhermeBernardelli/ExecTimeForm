@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormApi", "FormApi\FormApi.csproj", "{D5E93D81-EC24-43DD-8D93-73C9412678B9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderApi", "RenderApi\RenderApi.csproj", "{ADCE90FB-6DD8-464E-BA2B-44D3A16369E6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateApi", "CreateApi\CreateApi.csproj", "{73959341-9E6E-4AD9-9682-D06FCC23B816}"
 EndProject
 Global
@@ -15,14 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D5E93D81-EC24-43DD-8D93-73C9412678B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5E93D81-EC24-43DD-8D93-73C9412678B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D5E93D81-EC24-43DD-8D93-73C9412678B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5E93D81-EC24-43DD-8D93-73C9412678B9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADCE90FB-6DD8-464E-BA2B-44D3A16369E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADCE90FB-6DD8-464E-BA2B-44D3A16369E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADCE90FB-6DD8-464E-BA2B-44D3A16369E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADCE90FB-6DD8-464E-BA2B-44D3A16369E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{73959341-9E6E-4AD9-9682-D06FCC23B816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{73959341-9E6E-4AD9-9682-D06FCC23B816}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73959341-9E6E-4AD9-9682-D06FCC23B816}.Release|Any CPU.ActiveCfg = Release|Any CPU

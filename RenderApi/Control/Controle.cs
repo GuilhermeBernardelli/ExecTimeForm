@@ -222,25 +222,7 @@ namespace RenderApi.Control
         * Pesquisa de Renderização
         */
 
-        public List<Renderizar> pesquisaRenderizarReg(int valor)
-        {
-            int pesquisa = valor;
-
-            return dbRepository.pesquisaRenderizarReg(pesquisa);
-        }
-
-        public Renderizar pesquisaRenderizarIdUser(int valor, int user)
-        {
-            int pesquisa = valor;
-            int pesquisaUser = user;
-
-            return dbRepository.pesquisaRenderizarId_User(pesquisa, pesquisaUser);
-        }
-
-        public void excluirRenderizar(Renderizar render)
-        {
-            dbRepository.excluirRenderizar(render);
-        }
+        
 
         /*
          * Pesquisa de preenchimento

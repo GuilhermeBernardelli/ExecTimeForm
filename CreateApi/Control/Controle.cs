@@ -25,6 +25,15 @@ namespace CreateApi.Control
             dbRepository.salvarAlteracoes();
         }
 
+        public void construtor_formulario(int quest, int render, string usuario)
+        {
+            int id_quest = quest;
+            int id_render = render;
+            string user = usuario;
+
+            dbRepository.rodaProcedure(id_quest, id_render, user);
+        }
+
         /*
          * Controle Questionario
          */
@@ -222,6 +231,44 @@ namespace CreateApi.Control
         public void excluirRender(Renderizar render)
         {
             dbRepository.excluirDadosRender(render);
+        }
+
+        public List<Renderizar> pesquisaRenderizarReg(int valor)
+        {
+            int pesquisa = valor;
+
+            return dbRepository.pesquisaRenderizarReg(pesquisa);
+        }
+
+        public Renderizar pesquisaRenderizarIdUser(int valor, int user)
+        {
+            int pesquisa = valor;
+            int pesquisaUser = user;
+
+            return dbRepository.pesquisaRenderizarId_User(pesquisa, pesquisaUser);
+        }
+
+        public List<Prenchimentos> pesquisaPreenchimento_render_user(int id, string text)
+        {
+            int render = id;
+            string user = text;
+            return dbRepository.pesquisaPreenchimentoRenderUser(render, user);
+        }
+
+        public Prenchimentos pesquisaPreenchimentoUserName(string resposta, string usuario)
+        {
+            string pesquisa = resposta;
+            string user = usuario;
+
+            return dbRepository.pesquisaPreenchimentoNome(pesquisa, user);
+        }
+
+        public Prenchimentos pesquisaPreenchimento_perg_userNome(int idPergunta, string usuario)
+        {
+            int pesquisa = idPergunta;
+            string user = usuario;
+
+            return dbRepository.pesquisaPreenchimentoIdPerg_Nome(pesquisa, user);
         }
     }
 }

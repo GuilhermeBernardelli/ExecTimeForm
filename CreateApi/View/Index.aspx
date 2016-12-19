@@ -39,9 +39,16 @@
             <asp:TextBox ID="txtSenha" runat="server" Width="169px" TextMode="Password"></asp:TextBox>
             <br />
             <br />
+            <asp:CheckBox ID="chkAdministrador" runat="server" Text="Administrador : " TextAlign="Left" />
+            <br />
+            <br />
             <asp:Button ID="btnLogin" runat="server" Text="Login" class="button" OnClick="btnLogin_Click" Width="130px"/>
             &nbsp;&nbsp;
             <asp:Button ID="btnCAC" runat="server" Text="Login com CAC" class="button" Width="130px"/>
+            &nbsp;&nbsp;
+            <asp:Button ID="btnPublico" runat="server" class="button" OnClick="btnPublico_Click" Text="Quest. Públicos" Width="130px" />
+            <br />
+            <br />
         </asp:Panel>
     
         <asp:Panel ID="pnlNovo" runat="server" BorderStyle="Solid" BorderWidth="1px" Font-Bold="False" Font-Size="Medium" Height="270px" Visible="False" Width="540px">

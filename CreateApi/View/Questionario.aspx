@@ -106,12 +106,13 @@
                     <asp:Panel ID="Panel2" runat="server" Height="17px">
                         <asp:Label ID="lblAlerta" runat="server" ForeColor="Red" Font-Bold="True" Font-Size="Small"></asp:Label>
                     </asp:Panel>
-                    <asp:Panel ID="pnlButton" runat="server" Height="57px" HorizontalAlign="Center" Width="650px" ToolTip="inicia novo questionário">
+                    <asp:Panel ID="pnlButton" runat="server" Height="57px" HorizontalAlign="Left" Width="768px" ToolTip="inicia novo questionário">
                         <asp:Button ID="btnNovo" runat="server" CssClass="auto-style1" Font-Bold="True" OnClick="btnNovo_Click" Text="Novo" Width="115px" />
                         <asp:Button ID="btnSalvar" runat="server" CssClass="auto-style1" Font-Bold="True" OnClick="btnSalvar_Click" Text="Salvar" Visible="False" Width="115px" />
                         <asp:Button ID="btnEditar" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnEditar_Click" Text="Editar" Width="115px" Enabled="False" ToolTip="Edita titulo do questionário" />
                         <asp:Button ID="btnExcluir" runat="server" CssClass="auto-style2" Enabled="False" Font-Bold="True" OnClick="btnExcluir_Click" Text="Excluir" Width="115px" />
                         <asp:Button ID="btnAdicionar" runat="server" CssClass="auto-style2" Font-Bold="True" Text="Adic. Perguntas" Width="115px" Enabled="False" OnClick="btnAdicionar_Click" ToolTip="Adiciona perguntas ao questionário criado" />
+                        <asp:Button ID="btnVoltar" runat="server" CssClass="auto-style2" Enabled="False" Font-Bold="True" OnClick="btnVoltar_Click" Text="Voltar" ToolTip="Voltar" Width="115px" />
                     </asp:Panel>
                 </asp:Panel>
             </div>

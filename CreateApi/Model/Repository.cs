@@ -16,6 +16,11 @@ namespace CreateApi.Model
             entityModel.SaveChanges();
         }
 
+        public void rodaProcedure(int id_quest, int id_render, string user)
+        {
+            entityModel.realiza_preenchimento(id_quest, id_render, user);
+        }
+
         public void salvarNovoQuestionario(Questionarios questionario)
         {
             entityModel.Questionarios.Add(questionario);
@@ -216,6 +221,78 @@ namespace CreateApi.Model
             return (from usuario in entityModel.Usuarios
                     where (usuario.nome.Equals(valor))
                     select usuario).SingleOrDefault();
+        }
+
+        /*
+         * Pesquisa de renderização
+         */
+        public List<Renderizar> pesquisaRenderizarReg(int valor)
+        {
+            DateTime time = DateTime.Now;
+            return (from renderiza in entityModel.Renderizar
+                    where (renderiza.id_usuario == (valor)
+                    && renderiza.data_validade >= time.Date)
+                    select renderiza).ToList();
+        }
+
+        public Renderizar pesquisaRenderizarId_User(int valor, int user)
+        {
+            return (from renderiza in entityModel.Renderizar
+                    where (renderiza.id_questionario == valor)
+                    && (renderiza.id_usuario == user ||
+                    renderiza.id_usuario == 0)
+                    select renderiza).SingleOrDefault();
+        }
+
+
+        /*
+         * Pesquisas de Preenchimento
+         */
+
+        public Prenchimentos pesquisaPreenchimentoValorResp(string pesquisa, int render)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.valor_resposta.Equals(pesquisa))
+                    && (preenchimento.id_renderizar == render)
+                    select preenchimento).SingleOrDefault();
+        }
+
+        public Prenchimentos pesquisaPreenchimentoIdPerg_Nome(int pesquisa, string user)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.id_pergunta == pesquisa)
+                    && (preenchimento.usuario.Equals(user))
+                    select preenchimento).SingleOrDefault();
+        }
+
+        public Prenchimentos pesquisaPrenchimentoId(int pesquisa)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.id == pesquisa)
+                    select preenchimento).SingleOrDefault();
+        }
+
+        public List<Prenchimentos> pesquisaPreenchimentoRenderUser(int render, string user)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.id_renderizar == render)
+                    && (preenchimento.usuario.Equals(user))
+                    select preenchimento).ToList();
+        }
+
+        public Prenchimentos pesquisaPreenchimentoRender(int perg, int render)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.id_pergunta == perg)
+                    && (preenchimento.id_renderizar == render)
+                    select preenchimento).SingleOrDefault();
+        }
+        public Prenchimentos pesquisaPreenchimentoNome(string pesquisa, string user)
+        {
+            return (from preenchimento in entityModel.Prenchimentos
+                    where (preenchimento.valor_resposta.Equals(pesquisa))
+                    && (preenchimento.usuario.Equals(user))
+                    select preenchimento).SingleOrDefault();
         }
     }
 }

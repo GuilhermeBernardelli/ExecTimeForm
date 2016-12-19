@@ -32,6 +32,7 @@ namespace CreateApi.View
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            btnAlterar.TabIndex = 1;
             if (!IsPostBack)
             {
                 try
@@ -90,6 +91,7 @@ namespace CreateApi.View
             txtUser.Text = "";            
             txtRegistro.Text = "";
             txtNomeCompleto.Text = "";
+            txtData.Text = "";
             
         }
         //funções para seleção de método de inclusão:
@@ -100,6 +102,7 @@ namespace CreateApi.View
             pnlPesquisaQuest.Visible = true;
             //modifica os controles da view
             pnlMetodo.Visible = false;
+            btnPesqQuest.Focus();
         }
         //inclusão de questionários ao usuário
         protected void btnQuestUser_Click(object sender, EventArgs e)
@@ -108,6 +111,13 @@ namespace CreateApi.View
             pnlPesquisaUser.Visible = true;
             //modifica os controles da view
             pnlMetodo.Visible = false;
+            btnUserQuest.Focus();
+        }
+        //inclusão de novo questionário
+        protected void btnAdcQuest_Click(object sender, EventArgs e)
+        {
+            //chama a página para criação de questionários
+            Response.Redirect("Questionario.aspx");
         }
         //inclusão de novo usuário
         protected void btnAdcUsuario_Click(object sender, EventArgs e)
@@ -118,10 +128,12 @@ namespace CreateApi.View
             txtRegistro.Text = "";
             txtNomeCompleto.Text = "";
             rblPerfil.SelectedIndex = -1;
+ 
         }
         //função para busca de questionários
         protected void btnPesqQuest_Click(object sender, EventArgs e)
         {
+            
             try
             {
                 //verifica a existência de parametro de busca
@@ -139,6 +151,7 @@ namespace CreateApi.View
                     //verifica se houveram questionários que atenderam ao parametro de busca
                     if (LQuest.Count == 0)
                     {
+                        rblQuest.Visible = false;
                         lblAvisoQuest.Visible = true;
                         lblAvisoQuest.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
                     }
@@ -149,7 +162,7 @@ namespace CreateApi.View
                     * executa as instruções a seguir */
                     else
                     {
-                        //carrega a radio button list com os resultados da busca
+                        //carrega a radio button list com os resultados da busc
                         rblQuest.Visible = true;
                         rblQuest.DataSource = LQuest;
                         rblQuest.DataTextField = "nome";
@@ -169,6 +182,7 @@ namespace CreateApi.View
         //função para a busca de usuários
         protected void btnPesqUser_Click(object sender, EventArgs e)
         {
+            
             try
             {
                 //verifica a se existe algum parametro de busca
@@ -186,6 +200,7 @@ namespace CreateApi.View
                     //verifica se a pesquisa retornou vazia
                     if (LUser.Count == 0)
                     {
+                        rblUser.Visible = false;
                         lblAvisoUser.Visible = true;
                         lblAvisoUser.Text = "A pesquisa não retornou resultados, altere o parametro e tente novamente";
                     }
@@ -234,40 +249,55 @@ namespace CreateApi.View
                 //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
                 {
-                    //habilita o botão Salvar Alterações
+                    pnlLista.Controls.Add(new LiteralControl("<br />"));
                     btnSalvar.Enabled = true;
-                    for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                    btnVoltaQuest.Visible = false;
+                    btnVoltaUser.Visible = false;
+                    if (tipo.Equals("quest"))
                     {
-                        //verifica na relação dos questionários adicionados ao usuário de existe o questionário selecionado
-                        if (chkSelecionados.Items[i].Equals(rblQuest.SelectedItem))
+                        btnAlterar.Text = "Adic. quest.";
+                        //habilita o botão Salvar Alterações
+                        btnSalvar.Enabled = true;
+                        for (int i = 0; i < chkSelecionados.Items.Count; i++)
                         {
-                            //caso exista atribui valor true a variavel
-                            existe = true;
+                            //verifica na relação dos questionários adicionados ao usuário de existe o questionário selecionado
+                            if (chkSelecionados.Items[i].Equals(rblQuest.SelectedItem))
+                            {
+                                //caso exista atribui valor true a variavel
+                                existe = true;
+                            }
+                        }
+                        //no caso da variavel existe permanecer como false
+                        if (!existe)
+                        {
+                            //modifica os conteudos de texto da view
+                            btnVoltaQuest.Text = "Desfazer";
+                            txtQuest.Text = "";
+                            //adiciona a checkbox list de questionários o item selecionado
+                            chkSelecionados.Items.Add(rblQuest.SelectedItem);
+                            //limpa a radio button list de seleção
+                            rblQuest.Items.Clear();
+                            //modifica os controles da view
+                            chkSelecionados.Visible = true;
+                            pnlPrincipal.Enabled = false;
+                            pnlPesquisaQuest.Visible = false;
+                            pnlDataValidade.Visible = true;
+                        }
+                        //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                        else
+                        {
+                            existe = false;
+                            lblAvisoQuest.Visible = true;
+                            lblAvisoQuest.Text = "Questionário já incluso na lista";
                         }
                     }
-                    //no caso da variavel existe permanecer como false
-                    if (!existe)
-                    {
-                        //modifica os conteudos de texto da view
-                        btnVoltaQuest.Text = "Desfazer";
-                        txtQuest.Text = "";
-                        //adiciona a checkbox list de questionários o item selecionado
-                        chkSelecionados.Items.Add(rblQuest.SelectedItem);
-                        //limpa a radio button list de seleção
-                        rblQuest.Items.Clear();
-                        //modifica os controles da view
-                        chkSelecionados.Visible = true;
-                        pnlPrincipal.Enabled = false;
-                        pnlPesquisaQuest.Visible = false;
-                        pnlDataValidade.Visible = true;
-                    }
-                    //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
                     else
-                    {
-                        existe = false;
-                        lblAvisoQuest.Visible = true;
-                        lblAvisoQuest.Text = "Questionário já incluso na lista";
+                    {                        
+                        chkSelecionados.Items.Add(rblQuest.SelectedItem);
+                        txtQuest.Text = "";
+                        rblQuest.Items.Clear();
                     }
+
                 }
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros
@@ -281,7 +311,7 @@ namespace CreateApi.View
                 //verifica se já houve a seleção de tipo de pesquisa
                 if (tipo == null)
                 {
-                    //modifica os controles da view para a inclusão de questionários ao usuário
+                    //modifica os controles da view para a inclusão de questionários ao usuário                              
                     btnSalvar.Enabled = false;
                     lblTitulo.Text = "Inclusão de questionários ao usuário";
                     lblTipo.Visible = true;
@@ -291,41 +321,56 @@ namespace CreateApi.View
                     btnAlterar.Text = "Outro Usuário";
                     //atribui valor a variavel tipo
                     tipo = "user";
+
                 }
                 //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
                 {
-                    //habilita o botão Salvar Alterações
+                    pnlLista.Controls.Add(new LiteralControl("<br />"));
                     btnSalvar.Enabled = true;
-                    for (int i = 0; i < chkSelecionados.Items.Count; i++)
+                    btnVoltaQuest.Visible = false;
+                    btnVoltaUser.Visible = false;
+                    if (tipo.Equals("user"))
                     {
-                        //verifica na relação dos usuários adicionados ao questionário se existe o usuário selecionado
-                        if (chkSelecionados.Items[i].Equals(rblUser.SelectedItem))
+                        //habilita o botão Salvar Alterações
+                        btnSalvar.Enabled = true;
+                        for (int i = 0; i < chkSelecionados.Items.Count; i++)
                         {
-                            //caso exista atribui valor true a variavel
-                            existe = true;
+                            //verifica na relação dos usuários adicionados ao questionário se existe o usuário selecionado
+                            if (chkSelecionados.Items[i].Equals(rblUser.SelectedItem))
+                            {
+                                //caso exista atribui valor true a variavel
+                                existe = true;
+                            }
+                        }
+                        //no caso da variavel existe permanecer como false
+                        if (!existe)
+                        {
+                            //modifica os conteudos de texto da view
+                            txtUser.Text = "";
+                            //adiciona a checkbox list de usuários o item selecionado
+                            chkSelecionados.Items.Add(rblUser.SelectedItem);
+                            //limpa a radio button list de seleção
+                            rblUser.Items.Clear();
+                            //modifica os controles da view
+                            chkSelecionados.Visible = true;
+                            btnVoltaUser.Text = "Desfazer";
+                        }
+                        //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
+                        else
+                        {
+                            existe = false;
+                            lblAvisoUser.Visible = true;
+                            lblAvisoUser.Text = "Usuário já incluso na lista";
                         }
                     }
-                    //no caso da variavel existe permanecer como false
-                    if (!existe)
-                    {
-                        //modifica os conteudos de texto da view
-                        txtUser.Text = "";
-                        //adiciona a checkbox list de usuários o item selecionado
-                        chkSelecionados.Items.Add(rblUser.SelectedItem);
-                        //limpa a radio button list de seleção
-                        rblUser.Items.Clear();
-                        //modifica os controles da view
-                        chkSelecionados.Visible = true;
-                        btnVoltaUser.Text = "Desfazer";
-                    }
-                    //caso já exista no checkbox list o valor selecionado na radio button list, executa as instruções a seguir para evitar duplicidade
                     else
-                    {
-                        existe = false;
-                        lblAvisoUser.Visible = true;
-                        lblAvisoUser.Text = "Usuário já incluso na lista";
-                    }
+                    {                        
+                        chkSelecionados.Items.Add(rblUser.SelectedItem);
+                        txtUser.Text = "";
+                        rblUser.Items.Clear();
+                    }    
+                                
                 }
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros
@@ -344,23 +389,29 @@ namespace CreateApi.View
                 //modifica os controles da view
                 pnlPesquisaQuest.Visible = true;
                 txtQuest.Text = "";
+                btnPesqQuest.Focus();
             }
             else//tipo.Equals("quest")
             {
                 //modifica os controles da view, panel para inclusão da data de validade do questionário
                 pnlDataValidade.Visible = true;
+                btnData.Focus();
             }
         }
         
         protected void btnAlterar_Click(object sender, EventArgs e)
         {
             //modifica os controles da view
+            pnlDataValidade.Visible = false;
+            btnVoltaUser.Visible = true;
+            btnVoltaQuest.Visible = true;
+            btnSalvar.Enabled = false;
             btnInclude.Enabled = true;
             limpaFunction();
             //condicionais para identificar o tipo de alteração
             if (tipo.Equals("quest"))
             {
-                //modifica os controles da view
+                //modifica os controles da view                
                 pnlPrincipal.Visible = false;
                 pnlPesquisaQuest.Visible = true;
                 pnlPesquisaUser.Visible = false;
@@ -443,29 +494,56 @@ namespace CreateApi.View
         //interface para o tratamento do objeto data
         protected void btnData_Click(object sender, EventArgs e)
         {
-            try
+            if (txtData.Text.Equals(""))
             {
-                if (tipo.Equals("user"))
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaDb", "alert('O preenchimento da data é obrigatótio')", true);
+            }
+            else
+            {
+                bool dataValida = false;
+                DateTime resultado = DateTime.Now;
+                if (DateTime.TryParse(this.txtData.Text.Trim(), out resultado))
                 {
-                    //se o metodo de inclusão for questionarios ao usuário adiciona a cada novo questionário uma data referente              
-                    dataLista.Add(Convert.ToDateTime(txtData.Text));
-                    //modifica a visibilidade dos controles da view
-                    pnlPrincipal.Enabled = true;
-                    pnlPesquisaQuest.Visible = true;
-                    pnlDataValidade.Visible = false;
-                    txtData.Text = "";
+                    dataValida = true;
                 }
                 else
                 {
-                    //modifica a visibilidade dos controles da view
-                    data = txtData.Text;
-                    pnlDataValidade.Visible = false;
-                    pnlPesquisaUser.Visible = true;
-                    txtUser.Text = "";
+                    dataValida = false;
+                }
+
+                if (!dataValida)
+                {
+                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaDb", "alert('O preenchimento da data é obrigatótio')", true);
+                }
+
+                else
+                {
+
+                    try
+                    {
+                        if (tipo.Equals("user"))
+                        {
+                            //se o metodo de inclusão for questionarios ao usuário adiciona a cada novo questionário uma data referente              
+                            dataLista.Add(Convert.ToDateTime(txtData.Text));
+                            //modifica a visibilidade dos controles da view
+                            pnlPrincipal.Enabled = true;
+                            pnlPesquisaQuest.Visible = true;
+                            pnlDataValidade.Visible = false;
+                            txtData.Text = "";
+                        }
+                        else
+                        {
+                            //modifica a visibilidade dos controles da view
+                            data = txtData.Text;
+                            pnlDataValidade.Visible = false;
+                            pnlPesquisaUser.Visible = true;
+                            txtUser.Text = "";
+                        }
+                    }
+                    //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+                    catch { }
                 }
             }
-            //instruções circundadas com try, catch para evitar a exibição de possíveis erros
-            catch { }
         }
                
         //função incluida para a adição de usuários a partir da interface
@@ -487,6 +565,7 @@ namespace CreateApi.View
                             usuario.perfil = Convert.ToInt32(rblPerfil.SelectedValue);
                             controle.atualizarDados();
                             limpaFunction();
+                            Response.Redirect("Usuario.aspx");
                         }
                         else
                         {
@@ -513,6 +592,8 @@ namespace CreateApi.View
             }
             //catch genérico para evitar a exibição ao usuário de possíveis erros
             catch { }
+            //ao fim da operação de inclusão retorna a condição inicial da página
+            
         }
 
         protected void btnCancelaUser_Click(object sender, EventArgs e)
@@ -520,6 +601,24 @@ namespace CreateApi.View
             pnlUser.Visible = false;
             pnlMetodo.Visible = true;
             limpaFunction();            
+        }
+
+        protected void btnVoltaUser_Click(object sender, EventArgs e)
+        {
+            //em caso de desistência ou término das alterações retorna a condição inicial da página
+            Response.Redirect("Usuario.aspx");
+        }
+
+        protected void btnVoltaQuest_Click(object sender, EventArgs e)
+        {
+            //em caso de desistência ou término das alterações retorna a condição inicial da página
+            Response.Redirect("Usuario.aspx");
+        }
+
+        protected void txtData_TextChanged(object sender, EventArgs e)
+        {
+            btnData.Focus();
+            btnData.TabIndex = 5;
         }
     }
 }

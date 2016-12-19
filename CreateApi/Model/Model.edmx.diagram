@@ -5,19 +5,19 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="37795c82e2564f2c9bdeebf943649b95" Name="Diagram1">
-        <EntityTypeShape EntityType="DatabaseModel.Perguntas" Width="1.5" PointX="2.75" PointY="0.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Prenchimentos" Width="1.5" PointX="9.625" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Questionarios" Width="1.5" PointX="5" PointY="0.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Renderizar" Width="1.5" PointX="7.375" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Respostas" Width="1.5" PointX="2.75" PointY="4.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Tipos" Width="1.5" PointX="0.5" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Usuarios" Width="1.5" PointX="7.375" PointY="4.375" IsExpanded="true" />
-        <AssociationConnector Association="DatabaseModel.FK__Perguntas__id_qu__6FE99F9F" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK__Perguntas__tipo__70DDC3D8" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK__Respostas__id_pe__04E4BC85" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK__Prenchime__id_re__1BC821DD" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_qu__17F790F9" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_us__18EBB532" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DatabaseModel.Perguntas" Width="1.5" PointX="9.875" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DatabaseModel.Prenchimentos" Width="1.5" PointX="3.625" PointY="4.375" />
+        <EntityTypeShape EntityType="DatabaseModel.Questionarios" Width="1.5" PointX="6.625" PointY="0.75" />
+        <EntityTypeShape EntityType="DatabaseModel.Renderizar" Width="1.5" PointX="3.625" PointY="0.625" />
+        <EntityTypeShape EntityType="DatabaseModel.Respostas" Width="1.5" PointX="9.875" PointY="4.625" />
+        <EntityTypeShape EntityType="DatabaseModel.Tipos" Width="1.5" PointX="12.25" PointY="1" />
+        <EntityTypeShape EntityType="DatabaseModel.Usuarios" Width="1.5" PointX="0.75" PointY="0.75" />
+        <AssociationConnector Association="DatabaseModel.FK__Perguntas__id_qu__1B0907CE" />
+        <AssociationConnector Association="DatabaseModel.FK__Perguntas__tipo__1BFD2C07" />
+        <AssociationConnector Association="DatabaseModel.FK__Respostas__id_pe__1ED998B2" />
+        <AssociationConnector Association="DatabaseModel.FK__Prenchime__id_re__2D27B809" />
+        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_qu__286302EC" />
+        <AssociationConnector Association="DatabaseModel.FK__Renderiza__id_us__29572725" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

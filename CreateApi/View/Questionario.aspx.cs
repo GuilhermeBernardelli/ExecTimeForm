@@ -1,5 +1,5 @@
-﻿using FormApi.Control;
-using FormApi.Model;
+﻿using CreateApi.Control;
+using CreateApi.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
@@ -31,10 +31,11 @@ namespace FormApi.View
         static int ordemResp, qntOpc;
 
         protected void Page_Load(object sender, EventArgs e)
-        {   
+        {
             //função executada apenas no page load
             if (!IsPostBack)
             {
+                btnVoltar.Enabled = true;
                 //pesquisa na base os tipos de respostas possivel cadastrados
                 List<Tipos> listaTipos = controle.pesquisaTipos();
                 //adiciona a descrição de cada tipo encontrado no drop down list de tipos
@@ -42,6 +43,46 @@ namespace FormApi.View
                 {
                     ddlReposta.Items.Add(value.desc_tipo);
                 }
+
+                try
+                {
+                    //cria objeto da novo da base de dados
+                    Usuarios user = new Usuarios();
+                    //verifica se o login foi feito por usuário + senha na página Index.aspx
+                    if (Session["user"].ToString() == "")
+                    {
+                        //Variaveis de sessão recebidas no postback url
+                        string registro = Convert.ToString(Request.Form["hddRegFunc"]);
+                        string nome = Convert.ToString(Request.Form["hddNomeFunc"]);
+                        string perfil = Convert.ToString(Request.Form["hddEnumPerfil"]);
+
+                        //verifica a pré existencia do usuário na base de dados
+                        if (controle.pesquisaUsuarioReg(Convert.ToInt32(registro)) == null)
+                        {
+                            //Adiciona o usuário do acesso via postback url a base de dados 
+                            controle.salvarUsuario(user);
+                            user.nome = nome;
+                            user.registro = Convert.ToInt32(registro);
+                            user.perfil = Convert.ToInt32(perfil);
+                            //salva a adição de usuário
+                            controle.atualizarDados();
+                        }
+                    }
+                    //busca na base de dados o usuário no caso de login por usuário + senha
+                    else
+                    {
+                        //busca na base de dados por meio de variavel de sessão
+                        int registro = Convert.ToInt32(Session["user"]);
+                        user = controle.pesquisaUsuarioReg(registro);
+                    }
+                    //verifica se o perfil do usuário possui os privilégios para a utilização do módulo
+                    if (user.perfil != 1) //perfil 1 = administrador da aplicação
+                    {
+                        Response.Redirect("Index.aspx");
+                    }
+                }
+                //instruções circundadas com try, catch para evitar a exibição de possíveis erros
+                catch { }            
             }           
         }
         //função para determinar que o questionário volte ao estado original
@@ -86,12 +127,14 @@ namespace FormApi.View
                     {
                         quest = new Questionarios();
                         quest.nome = txtTitulo.Text.Trim();
+                        quest.ativo = true;
 
                         txtTitulo.Enabled = false;
                         lblAlerta.Visible = false;
                         btnNovo.Enabled = false;
                         btnEditar.Enabled = true;
                         btnAdicionar.Enabled = true;
+                        btnVoltar.Enabled = false;
 
                         controle.salvarQuestionario(quest);
                         controle.atualizarDados();
@@ -132,12 +175,14 @@ namespace FormApi.View
                 //busca na base de dados o questionario a ser atualizado
                 quest = controle.pesquisaQuestionarioId(questionarioId);
                 quest.nome = txtTitulo.Text.Trim();
+                quest.ativo = true;
                 controle.atualizarDados();
                 btnNovo.Visible = true;
                 btnSalvar.Visible = false;
                 btnEditar.Enabled = true;
                 txtTitulo.Enabled = false;
                 btnAdicionar.Enabled = true;
+                btnVoltar.Enabled = false;
                 //informa ao usuário o sucesso da operação
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaAtualizadoOK", "alert('Alteração realizada com sucesso.');", true);
             }
@@ -163,6 +208,7 @@ namespace FormApi.View
             chkObrigatorio.Checked = false;
             txtPergunta.Text = "";
             pnlSair.Visible = false;
+            btnVoltar.Enabled = false;
         }      
         // função para exclusão do questionário
         protected void btnExcluir_Click(object sender, EventArgs e)
@@ -199,8 +245,9 @@ namespace FormApi.View
                 txtTitulo.Text = "";
                 txtTitulo.Enabled = true;
                 btnExcluir.Enabled = false;
-                // limpa a variavel que faz a contagem de perguntas
-                pergCount = 0;
+                btnVoltar.Enabled = true;
+                // reinicia a variável que faz a contagem de perguntas
+                pergCount = 1;
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros ao usuário
             catch { }
@@ -295,7 +342,7 @@ namespace FormApi.View
                             perguntaId = perg.id;
                         }
                         // caso a pergunta não aceite opções em sua resposta
-                        else if (ddlReposta.SelectedValue.Equals("Texto") || ddlReposta.SelectedValue.Equals("Numero") || ddlReposta.SelectedValue.Equals("Data"))
+                        else if (ddlReposta.SelectedValue.Equals("Texto") || ddlReposta.SelectedValue.Equals("Número") || ddlReposta.SelectedValue.Equals("Data"))
                         {
 
                             //busca na base o tipo cadastrado pelo valor selecionado da drop down list
@@ -530,10 +577,15 @@ namespace FormApi.View
                 //exibe mensagem em box com a informação de inclusão de questionário e informa o id e titulo deste
                 ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaAtualizado", "alert('Criado o questionario com ID:" + questionarioId.ToString() + " e titulo:" + quest.nome + "');", true);
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
-                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaNaoAtualizado", "alert('Não foi possivel efetuar a criação do questionario ID:" + questionarioId.ToString() + " e titulo:" + quest.nome + ", error message: "+ ex.ToString() +"');", true);
-
+                //mensagem em caso de erros ao atualizar o banco de dados
+                ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alertaNaoAtualizado", "alert('Não foi possivel efetuar a criação do questionario ID:" + questionarioId.ToString() + " e titulo:" + quest.nome + ", error message: " + ex.ToString() + "');", true);
+            }
+            finally
+            {
+                //redireciona o usuário devolta á pagina de atribuição, criação e seleção
+                Response.Redirect("Usuario.aspx");
             }
         }
         //função para alterar a ordenação da opção selecionada para cima
@@ -574,6 +626,26 @@ namespace FormApi.View
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros ao usuário
             catch { }
         }
+
+        protected void btnVoltar_Click(object sender, EventArgs e)
+        {
+            //ao pressionar voltar o sistema tenta salvar o questionário aberto
+            try
+            {
+                btnSalvarSair_Click(sender, e);
+            }
+            //caso não consiga tenta excluir
+            catch
+            {
+                btnExcluir_Click(sender, e);
+            }
+            //e finalmente, chama a página de seleção
+            finally
+            {
+                Response.Redirect("Usuario.aspx");
+            }
+        }
+
         //função para alterar a ordenação da opção selecionada para baixo
         protected void btnDownOrdem_Click(object sender, ImageClickEventArgs e)
         {

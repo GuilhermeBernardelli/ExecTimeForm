@@ -14,17 +14,11 @@ namespace FormApi.Model
     
     public partial class Respostas
     {
-        public Respostas()
-        {
-            this.Prenchimentos = new HashSet<Prenchimentos>();
-        }
-    
         public int id { get; set; }
         public string resposta { get; set; }
         public Nullable<int> id_pergunta { get; set; }
         public int ordem { get; set; }
     
         public virtual Perguntas Perguntas { get; set; }
-        public virtual ICollection<Prenchimentos> Prenchimentos { get; set; }
     }
 }
