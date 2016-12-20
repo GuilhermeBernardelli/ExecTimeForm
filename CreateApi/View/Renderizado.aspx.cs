@@ -159,7 +159,7 @@ namespace RenderApi.View
                 //adiciona no panel criado a label criada
                 panelPergunta.Controls.Add(labelPergunta);
                 //adiciona ao panel principal um novo parágrafo
-                panelPergunta.Controls.Add(new LiteralControl("<br>"));
+                panelPergunta.Controls.Add(new LiteralControl("<br/>"));
 
                 //identifica o tipo de resposta atribuido a esta pergunta
                 if (perg[count].tipo == 1)
@@ -249,6 +249,10 @@ namespace RenderApi.View
                         radioResposta.Items[i].Selected = true;
                         //muda o estado da variavel para true, true = respondida
                         selecao = true;
+                    }
+                    else
+                    {
+                        radioResposta.Items[i].Selected = false;
                     }
                 }
                 //adiciona no panel resposta o controle criado com as respostas

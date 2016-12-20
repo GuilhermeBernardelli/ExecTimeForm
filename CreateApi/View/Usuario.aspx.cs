@@ -29,12 +29,15 @@ namespace CreateApi.View
         static string data;
         //uma list para armazenar as datas de validade na inclusão de questionarios ao usuário
         static List<DateTime> dataLista = new List<DateTime>();
+        static int espaco = 140;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             btnAlterar.TabIndex = 1;
             if (!IsPostBack)
             {
+                tipo = null;
+                espaco = 140;
                 try
                 {
                     //cria objeto da novo da base de dados
@@ -248,13 +251,18 @@ namespace CreateApi.View
                 }
                 //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
-                {
-                    pnlLista.Controls.Add(new LiteralControl("<br />"));
+                {                    
                     btnSalvar.Enabled = true;
                     btnVoltaQuest.Visible = false;
                     btnVoltaUser.Visible = false;
-                    if (tipo.Equals("quest"))
+
+                    if (tipo.Equals("user"))
                     {
+                        espaco = espaco + 30;
+                        string countEspaco = espaco.ToString();
+                        //pnlPrincipal.Attributes.Remove("Height");
+                        pnlPrincipal.ControlStyle.Height = espaco;
+
                         btnAlterar.Text = "Adic. quest.";
                         //habilita o botão Salvar Alterações
                         btnSalvar.Enabled = true;
@@ -288,7 +296,10 @@ namespace CreateApi.View
                         {
                             existe = false;
                             lblAvisoQuest.Visible = true;
-                            lblAvisoQuest.Text = "Questionário já incluso na lista";
+                            lblAvisoQuest.Text = "Questionário já incluso na lista, por favor selecione outro";
+                            txtQuest.Text = "";
+                            rblQuest.Items.Clear();
+                            espaco = espaco - 30;
                         }
                     }
                     else
@@ -325,13 +336,18 @@ namespace CreateApi.View
                 }
                 //caso já haja um tipo atribuido a variavel tipo executa as instruções a seguir
                 else
-                {
-                    pnlLista.Controls.Add(new LiteralControl("<br />"));
+                {                   
                     btnSalvar.Enabled = true;
                     btnVoltaQuest.Visible = false;
                     btnVoltaUser.Visible = false;
-                    if (tipo.Equals("user"))
+                    if (tipo.Equals("quest"))
                     {
+                        espaco = espaco + 30;
+                        string countEspaco = espaco.ToString();
+                        //pnlPrincipal.Attributes.Remove("Height");
+                        pnlPrincipal.ControlStyle.Height = espaco;
+
+
                         //habilita o botão Salvar Alterações
                         btnSalvar.Enabled = true;
                         for (int i = 0; i < chkSelecionados.Items.Count; i++)
@@ -361,7 +377,9 @@ namespace CreateApi.View
                         {
                             existe = false;
                             lblAvisoUser.Visible = true;
-                            lblAvisoUser.Text = "Usuário já incluso na lista";
+                            lblAvisoUser.Text = "Usuário já incluso na lista, por favor selecione outro";
+                            txtUser.Text = "";
+                            rblUser.Items.Clear();
                         }
                     }
                     else
@@ -379,8 +397,11 @@ namespace CreateApi.View
         //função para realizar inclusões no item selecionado
         protected void btnInclude_Click(object sender, EventArgs e)
         {
+            btnVoltaUser.Visible = false;
+            btnVoltaQuest.Visible = false;
             //modifica os controles da view
             btnInclude.Enabled = false;
+            btnAlterar.Enabled = false;
             //limpa o estado dos controles da view
             limpaFunction();
             // realiza a leitura da variavel tipo
@@ -407,6 +428,7 @@ namespace CreateApi.View
             btnVoltaQuest.Visible = true;
             btnSalvar.Enabled = false;
             btnInclude.Enabled = true;
+            btnAlterar.Enabled = true;
             limpaFunction();
             //condicionais para identificar o tipo de alteração
             if (tipo.Equals("quest"))
@@ -418,6 +440,7 @@ namespace CreateApi.View
                 txtQuest.Text = "";
                 //estabelece como nulo o tipo de metodo de inclusão
                 tipo = null;
+                espaco = 140;
             }
             else
             {
@@ -428,13 +451,17 @@ namespace CreateApi.View
                 txtUser.Text = "";
                 //estabelece como nulo o tipo de metodo de inclusão
                 tipo = null;
+                espaco = 140;
             }
         }
         // função para cancelar alterações e retornar ao estado inicial da page
         protected void btnCancela_Click(object sender, EventArgs e)
         {
+            btnVoltaUser.Visible = true;
+            btnVoltaQuest.Visible = true;
             tipo = null;
-            Response.Redirect("Usuario.aspx");            
+            Response.Redirect("Usuario.aspx");
+            espaco = 140;         
         }
         //função para salvar alterações realizadas
         protected void btnSalvar_Click(object sender, EventArgs e)
@@ -607,18 +634,29 @@ namespace CreateApi.View
         {
             //em caso de desistência ou término das alterações retorna a condição inicial da página
             Response.Redirect("Usuario.aspx");
+            tipo = null;
+           espaco = 140;
         }
 
         protected void btnVoltaQuest_Click(object sender, EventArgs e)
         {
             //em caso de desistência ou término das alterações retorna a condição inicial da página
             Response.Redirect("Usuario.aspx");
+            tipo = null;
+           espaco = 140;
         }
 
         protected void txtData_TextChanged(object sender, EventArgs e)
         {
             btnData.Focus();
             btnData.TabIndex = 5;
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+            Response.Redirect("Index.aspx");
         }
     }
 }

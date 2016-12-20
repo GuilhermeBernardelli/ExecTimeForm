@@ -72,7 +72,7 @@
     <form id="form1" runat="server" class="auto-style9">
         <div>
     
-        <asp:Panel ID="pnlPrincipal" runat="server" Height="118px" Width="652px" Visible="False">
+        <asp:Panel ID="pnlPrincipal" runat="server" Height="140px" Width="628px" Visible="False">
             <asp:Label ID="lblTitulo" runat="server" Font-Bold="True" Font-Size="Large"></asp:Label>
             <br />
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -83,25 +83,24 @@
             <asp:Button ID="btnAlterar" runat="server" CssClass="auto-style2" Font-Bold="True" Font-Italic="False" Width="130px" OnClick="btnAlterar_Click" TabIndex="1" />
             <asp:Button ID="btnSalvar" runat="server" CssClass="auto-style2" Font-Bold="True" Font-Italic="False" Text="Salvar Alterações" Width="130px" OnClick="btnSalvar_Click" TabIndex="1" />
             <asp:Button ID="btnCancela" runat="server" CssClass="auto-style2" Font-Bold="True" Font-Italic="False" Text="Cancelar" Width="130px" OnClick="btnCancela_Click" TabIndex="1" />
+            <br />
             <br />            
+            <asp:CheckBoxList ID="chkSelecionados" runat="server" CssClass="auto-style5" RepeatLayout="Flow" TextAlign="Left">
+            </asp:CheckBoxList>
+            <br />
         </asp:Panel>
     
     </div>
-        <div class="auto-style10">
-            <asp:Panel ID="pnlLista" runat="server" CssClass="auto-style9" Height="26px" Width="651px">
-                <asp:CheckBoxList ID="chkSelecionados" runat="server" CssClass="auto-style5" RepeatLayout="Flow" TextAlign="Left">
-                </asp:CheckBoxList>
-            </asp:Panel>
-        </div>
-        <asp:Panel ID="pnlMetodo" runat="server" Height="92px" Width="652px">
+        <asp:Panel ID="pnlMetodo" runat="server" Height="92px" Width="767px">
             Escolha um método de inclusão:<br />
             <br />
             <asp:Button ID="btnAdcUsuario" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnAdcUsuario_Click" Text="Novo usuário" Width="120px" />
             <asp:Button ID="btnAdcQuest" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnAdcQuest_Click" Text="Novo question." Width="120px" Font-Size="Small" />
             <asp:Button ID="btnUserQuest" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnUserQuest_Click" Text="Usuár. ao quest." Width="120px" />
             <asp:Button ID="btnQuestUser" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnQuestUser_Click" Text="Quest. ao usuár." Width="120px" Height="26px" />
+            <asp:Button ID="btnLogout" runat="server" CssClass="auto-style2" Font-Bold="True" Font-Italic="False" OnClick="btnLogout_Click" TabIndex="1" Text="Sair" Width="130px" />
         </asp:Panel>
-        <asp:Panel ID="pnlPesquisaUser" runat="server" Height="127px" Width="652px" Visible="False">
+        <asp:Panel ID="pnlPesquisaUser" runat="server" Height="146px" Width="652px" Visible="False">
             Digite parte do nome ou o registro do usuário<br />
             <asp:TextBox ID="txtUser" runat="server" Width="488px"></asp:TextBox>
             <asp:Button ID="btnPesqUser" runat="server" CssClass="auto-style2" Font-Bold="True" Text="Pesquisar" Width="120px" OnClick="btnPesqUser_Click" />
@@ -114,7 +113,7 @@
             </asp:Panel>
             
         </asp:Panel>
-        <asp:Panel ID="pnlPesquisaQuest" runat="server" Height="127px" Width="652px" Visible="False">
+        <asp:Panel ID="pnlPesquisaQuest" runat="server" Height="142px" Width="652px" Visible="False">
             Digite parte do titulo do Questionário<br />
             <asp:TextBox ID="txtQuest" runat="server" Width="488px"></asp:TextBox>
             <asp:Button ID="btnPesqQuest" runat="server" CssClass="auto-style2" Font-Bold="True" Text="Pesquisar" Width="120px" OnClick="btnPesqQuest_Click" />
@@ -129,7 +128,7 @@
         <asp:Panel ID="pnlDataValidade" runat="server" Height="77px" Visible="False" Width="651px">
             Digite ou selecione a data de validade do Questionário<br />
             <br />
-            <asp:TextBox ID="txtData" runat="server" CausesValidation="True" TextMode="Date" ValidateRequestMode="Enabled" Width="162px" AutoPostBack="True" OnTextChanged="txtData_TextChanged"></asp:TextBox>
+            <asp:TextBox ID="txtData" runat="server" CausesValidation="True" TextMode="Date" ValidateRequestMode="Enabled" Width="162px" OnTextChanged="txtData_TextChanged"></asp:TextBox>
             <asp:Button ID="btnData" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnData_Click" Text="Confirmar" Width="120px" />
         </asp:Panel>
         <asp:Panel ID="pnlUser" runat="server" Height="194px" Visible="False" Width="651px">
