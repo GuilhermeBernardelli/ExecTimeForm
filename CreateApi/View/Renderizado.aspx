@@ -50,7 +50,7 @@
             &nbsp;&nbsp;&nbsp;<asp:ImageButton ID="btnLeft" runat="server" Height="36px" ImageUrl="~/Image/leftArrow.png" OnClick="btnLeft_Click" Width="36px" />
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<asp:ImageButton ID="btnRight" runat="server" Height="36px" ImageUrl="~/Image/rightArrow.png" OnClick="btnRight_Click" Width="36px" />
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <asp:Button ID="btnSalvar" runat="server" Text="Salvar Resp." class="button" OnClick="btnSalvar_Click" />
+            <asp:Button ID="btnSalvar" runat="server" Text="Salvar e Sair" class="button" OnClick="btnSalvar_Click" />
         </asp:Panel>
         <asp:Panel ID="pnlPrincipal" runat="server" Height="58px">
         </asp:Panel>

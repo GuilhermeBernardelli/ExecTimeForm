@@ -255,12 +255,23 @@ namespace CreateApi.Control
             return dbRepository.pesquisaPreenchimentoRenderUser(render, user);
         }
 
-        public Prenchimentos pesquisaPreenchimentoUserName(string resposta, string usuario)
+        public Prenchimentos pesquisaPreenchimentoUserName(string resposta, string usuario, int render, int pergunta)
         {
+            int idPerg = pergunta;
+            int id = render;
             string pesquisa = resposta;
             string user = usuario;
 
-            return dbRepository.pesquisaPreenchimentoNome(pesquisa, user);
+            return dbRepository.pesquisaPreenchimentoNome(pesquisa, user, id, idPerg);
+        }
+
+        public Perguntas pesquisaPerguntaQuestIdNum(int id, int num)
+        {
+            int questId = id;
+            int pergNum = num;
+
+            return dbRepository.pesquisaGeralPerguntaPerg_QuestNum(questId, pergNum);
+
         }
 
         public Prenchimentos pesquisaPreenchimento_perg_userNome(int idPergunta, string usuario)

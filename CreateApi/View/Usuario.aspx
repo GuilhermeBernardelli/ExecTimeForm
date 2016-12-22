@@ -98,7 +98,7 @@
             <asp:Button ID="btnAdcQuest" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnAdcQuest_Click" Text="Novo question." Width="120px" Font-Size="Small" />
             <asp:Button ID="btnUserQuest" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnUserQuest_Click" Text="Usuár. ao quest." Width="120px" />
             <asp:Button ID="btnQuestUser" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnQuestUser_Click" Text="Quest. ao usuár." Width="120px" Height="26px" />
-            <asp:Button ID="btnLogout" runat="server" CssClass="auto-style2" Font-Bold="True" Font-Italic="False" OnClick="btnLogout_Click" TabIndex="1" Text="Sair" Width="130px" />
+            <asp:Button ID="btnLogout" runat="server" CssClass="auto-style2" Font-Bold="True" OnClick="btnLogout_Click" TabIndex="1" Text="Sair" Width="130px" Height="26px"/>
         </asp:Panel>
         <asp:Panel ID="pnlPesquisaUser" runat="server" Height="146px" Width="652px" Visible="False">
             Digite parte do nome ou o registro do usuário<br />

@@ -2,8 +2,7 @@
 using CreateApi.Model;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
-using System.IO;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -24,6 +23,7 @@ namespace RenderApi.View
         static List<Perguntas> perg;
         static List<Respostas> resp;
         static List<Prenchimentos> preenchimentos;
+        static Questionarios quest;
         static Usuarios user;
         static Renderizar render; 
         static Prenchimentos valores = new Prenchimentos();
@@ -32,6 +32,8 @@ namespace RenderApi.View
         static CheckBox chkResposta;        
         static Panel panelPergunta;
         static Panel panelResposta;
+        static int respostas = 0;
+
         //objeto para comunicação com a camada control
         Controle controle = new Controle();
 
@@ -48,7 +50,7 @@ namespace RenderApi.View
                     //pesquisa na base o usuário e armazena na variavel global
                     user = controle.pesquisaUsuarioReg(reg);
                     //pesquisa na base o questionário, informação armazenada em variavel local
-                    Questionarios quest = controle.pesquisaQuestionarioId(id);
+                    quest = controle.pesquisaQuestionarioId(id);
                     //pesquisa na base o renderizador e armazena na variavel global
                     render = controle.pesquisaRenderizarIdUser(id, user.id);
                     //modifica os controles da view para personalização
@@ -90,7 +92,7 @@ namespace RenderApi.View
             }
             //a cada ação de postback da pagina carrega novamente a pergunta em tela
             else
-            {
+            {                
                 posicionaPergunta();
             }            
 
@@ -135,7 +137,8 @@ namespace RenderApi.View
         }
         //função para renderizar as perguntas em tempo de execução
         public void posicionaPergunta()
-        {            
+        {
+            //pergunta = controle.pesquisaPerguntaQuestIdNum(quest.id, count+1);     
             //atribui o valor para a variavel como false = não respondido
             selecao = false;
             try
@@ -220,7 +223,8 @@ namespace RenderApi.View
                 {
                     //atribui a este alguns elementos
                     ID = perg[count].id.ToString(),
-                    AutoPostBack = true
+                    AutoPostBack = true,
+                    EnableViewState = false
                 };
                 //alimenta esta radio button list com a lista de respostas
                 radioResposta.DataSource = resp;
@@ -230,18 +234,15 @@ namespace RenderApi.View
                 //adiciona a esta lista a função do evento de seleção
                 radioResposta.Attributes.Add("OnSelectIndexChanged", "radioResposta_SelectedIndexChanged");
                 radioResposta.SelectedIndexChanged += new EventHandler(radioResposta_SelectedIndexChanged);
+                //limpa os valores de resposta
+                radioResposta.ClearSelection();
 
                 for (int i = 0; i < radioResposta.Items.Count; i++)
                 {
                     //para cada elemento atribui o texto da resposta correspondente na lista
-                    string opção = resp[i].resposta;
-                    radioResposta.Items[i].Text = opção;
-                }
-
-                for (int i = 0; i < radioResposta.Items.Count; i++)
-                {
+                    radioResposta.Items[i].Text = resp[i].resposta;
                     //busca na base de dados os preenchimentos para a questão do referido render
-                    valores = controle.pesquisaPreenchimentoUserName(radioResposta.Items[i].Text, lblUser.Text);
+                    valores = controle.pesquisaPreenchimentoUserName(radioResposta.Items[i].Text, lblUser.Text, render.id, perg[count].id);
                     //para cada resposta verifica se existe algum valor preenchido na tabela de preenchimentos, onde preenchido = 1
                     if (valores.resposta == 1)
                     {
@@ -250,11 +251,7 @@ namespace RenderApi.View
                         //muda o estado da variavel para true, true = respondida
                         selecao = true;
                     }
-                    else
-                    {
-                        radioResposta.Items[i].Selected = false;
-                    }
-                }
+                }                
                 //adiciona no panel resposta o controle criado com as respostas
                 panelResposta.Controls.Add(radioResposta);
             }
@@ -289,7 +286,7 @@ namespace RenderApi.View
                     chkResposta.Text = resp[i].resposta;
                     panelResposta.Controls.Add(chkResposta);
                     //busca na base de dados os preenchimentos para a questão do referido render
-                    valores = controle.pesquisaPreenchimentoUserName(resp[i].resposta, lblUser.Text);
+                    valores = controle.pesquisaPreenchimentoUserName(resp[i].resposta, lblUser.Text, render.id, perg[count].id);
                     //verifica quais elementos estão ou não selecionados
                     if (valores.resposta == 1)
                     {
@@ -297,6 +294,11 @@ namespace RenderApi.View
                         chkResposta.Checked = true;
                         //altera o valor da variavel de selecao para true
                         selecao = true;
+                    }
+                    else
+                    {
+                        //altera o estado do elemento ao carregar
+                        chkResposta.Checked = false;
                     }
                 }
             }
@@ -414,7 +416,7 @@ namespace RenderApi.View
                 //atribui a variavel caixa o valor do sender tipificando antes o objeto como checkbox
                 CheckBox caixa = sender as CheckBox;
                 //pesquisa o estado da resposta na base de preenchimentos
-                valores = controle.pesquisaPreenchimentoUserName(caixa.Text, lblUser.Text);
+                valores = controle.pesquisaPreenchimentoUserName(caixa.Text, lblUser.Text, render.id, perg[count].id);
 
                 if (caixa.Checked)
                 {
@@ -435,7 +437,7 @@ namespace RenderApi.View
         }
         //evento adicionado aos controles tipo radio button list criados
         protected void radioResposta_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        {            
             try
             {
                 //atribui as variaveis, respectivamente, o valor de respondido, e o texto do item selecionado
@@ -444,22 +446,26 @@ namespace RenderApi.View
                 //verifica todos os elementos da resposta
                 for (int i = 0; i < radioResposta.Items.Count; i++)
                 {
+                    valores = controle.pesquisaPreenchimentoUserName(radioResposta.Items[i].Text, lblUser.Text, render.id, perg[count].id);
+
                     if (itemSelecionado.Equals(radioResposta.Items[i].Text))
                     {
-                        //altera o estado do item selecionado                   
-                        valores = controle.pesquisaPreenchimentoUserName(radioResposta.Items[i].Text, lblUser.Text);
+                        //altera o estado do item selecionado                                           
                         valores.resposta = 1;
+                        //salva as alterações
                         controle.atualizarDados();
                     }
                     else
                     {
-                        //altera o estado dos itens não selecionados
-                        valores = controle.pesquisaPreenchimentoUserName(radioResposta.Items[i].Text, lblUser.Text);
+                        //altera o estado para os itens não selecionados
                         valores.resposta = 0;
-                    }
+                        //salva as alterações
+                        controle.atualizarDados();
+                    }                    
                 }
                 //salva as alterações
-                controle.atualizarDados();
+                //controle.atualizarDados();
+                carregarRadioButtonList();
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros
             catch { }
@@ -480,15 +486,76 @@ namespace RenderApi.View
                     //atribui a resposta o valor de não respondida caso o campo esteja em branco
                     selecao = false;
                     valores.resposta = 0;
+                    //salva as alterações
+                    controle.atualizarDados();
                 }
+                //caso o campo esteja preenchido segue as rotinas abaixo
                 else
                 {
-                    //atribui as variaveis a condição de respondida
-                    selecao = true;
-                    valores.resposta = 1;
-                }
-                //salva as alterações
-                controle.atualizarDados();
+                    //validação caso o campo seja do tipo data
+                    if (perg[count].tipo == 4)
+                    {
+                        //valida se o conteúdo do campo de texto é uma data
+                        bool dataValida = false;
+                        DateTime resultado = DateTime.Now;
+                        if (DateTime.TryParse(text.Text.Trim(), out resultado))
+                        {
+                            dataValida = true;
+                        }
+                        else
+                        {
+                            dataValida = false;
+                        }
+                        //caso o conteúdo do campo não seja uma data valida
+                        if (dataValida)
+                        {
+                            //atribui as variaveis a condição de respondida
+                            selecao = true;
+                            valores.resposta = 1;
+                            //salva as alterações
+                            controle.atualizarDados();
+                        }
+                        else
+                        {
+                            text.Text = "";
+                            ScriptManager.RegisterStartupScript(this.Page, GetType(), "alert", "alert('Por favor preencha o campo com uma data valida.');", true);
+                            //atribui a resposta o valor de não respondida caso o campo esteja com uma resposta invalida
+                            selecao = false;
+                            valores.resposta = 0;
+                        }                        
+                        
+                    }
+                    //validação caso o campo seja do tipo número
+                    else if (perg[count].tipo == 5)
+                    {
+                        //caso o valor do campo seja numérico
+                        if (text.Text.All(char.IsDigit))
+                        {
+                            //atribui as variaveis a condição de respondida
+                            selecao = true;
+                            valores.resposta = 1;
+                            //salva as alterações
+                            controle.atualizarDados();
+                        }
+                        else
+                        {
+                            text.Text = "";
+                            ScriptManager.RegisterStartupScript(this.Page, GetType(), "alert", "alert('Por favor preencha o campo com valores numéricos.');", false);
+                            //atribui a resposta o valor de não respondida caso o campo esteja com uma resposta invalida
+                            selecao = false;
+                            valores.resposta = 0;
+                        }
+                    }
+                    //caso o campo seja texto simples não há validação do conteúdo
+                    else
+                    {
+                        //atribui as variaveis a condição de respondida
+                        selecao = true;
+                        valores.resposta = 1;
+                        //salva as alterações
+                        controle.atualizarDados();
+                    }
+                }                
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros
             catch { }
@@ -505,112 +572,123 @@ namespace RenderApi.View
                     Text = "Resposta obrigatória"
                 };
                 //adiciona esta label ao panel pergunta
-                panelPergunta.Controls.Add(lblAlerta);
-                //cria uma variavel para contar as respostas com valor válido
-                int respostas = 0;
-                for (int i = 0; i < countMax; i++)
+                if (perg[count].obrigatorio && !selecao)
                 {
-                    //verifica a cada pergunta a obrigatoriedade de resposta
-                    if (perg[i].obrigatorio)
+                    panelPergunta.Controls.Add(lblAlerta);
+                }
+
+                else
+                {
+                    //cria uma variavel para contar as respostas com valor válido
+                    respostas = 0;
+                    for (int i = 0; i < countMax; i++)
                     {
-                        //verifica se a pergunta de resposta obrigatória é do tipo radio button
-                        if (perg[i].tipo == 1)
+                        //verifica a cada pergunta a obrigatoriedade de resposta
+                        if (perg[i].obrigatorio)
                         {
-                            //armazena na variavel 
-                            resp = controle.pesquisaRespostaQuestão(perg[i].id);
-                            foreach (Respostas value in resp)
+                            //verifica se a pergunta de resposta obrigatória é do tipo radio button
+                            if (perg[i].tipo == 1)
                             {
-                                //para cada resposta possivel verifica se o valor esta selecionado
-                                valores = controle.pesquisaPreenchimentoUserName(value.resposta, lblUser.Text);
-                                if (valores.resposta == 1)
+                                //armazena na variavel 
+                                resp = controle.pesquisaRespostaQuestão(perg[i].id);
+                                foreach (Respostas value in resp)
                                 {
-                                    //se localizar um valor marcado incrementa as respostas validas
+                                    //para cada resposta possivel verifica se o valor esta selecionado
+                                    valores = controle.pesquisaPreenchimentoUserName(value.resposta, lblUser.Text, render.id, perg[i].id);
+                                    if (valores.resposta == 1)
+                                    {
+                                        //se localizar um valor marcado incrementa as respostas validas
+                                        respostas++;
+                                    }
+                                }
+                            }
+                            //verifica se a pergunta de resposta obrigatória é do tipo checkbox
+                            else if (perg[i].tipo == 2)
+                            {
+                                //cria variavel local para verificar se algum box está selecionado, valor padrão false
+                                bool testeChk = false;
+                                //armazena todas as opções de resposta para a pergunta
+                                resp = controle.pesquisaRespostaQuestão(perg[i].id);
+                                foreach (Respostas value in resp)
+                                {
+                                    //para cada valor de resposta verifica se a caixa esta marcada
+                                    valores = controle.pesquisaPreenchimentoUserName(value.resposta, lblUser.Text, render.id, perg[i].id);
+                                    if (valores.resposta == 1)
+                                    {
+                                        //identificando ao menos uma caixa como marcada altera o valor da variavel de verificação
+                                        testeChk = true;
+                                    }
+                                }
+                                if (testeChk)
+                                {
+                                    //sendo o valor da variavel de verificação verdadeiro incrementa as respostas válidas
                                     respostas++;
                                 }
                             }
-                        }
-                        //verifica se a pergunta de resposta obrigatória é do tipo checkbox
-                        else if (perg[i].tipo == 2)
-                        {
-                            //cria variavel local para verificar se algum box está selecionado, valor padrão false
-                            bool testeChk = false;
-                            //armazena todas as opções de resposta para a pergunta
-                            resp = controle.pesquisaRespostaQuestão(perg[i].id);
-                            foreach (Respostas value in resp)
+                            //todas as respostas do tipo texto entraram nesta condição
+                            else
                             {
-                                //para cada valor de resposta verifica se a caixa esta marcada
-                                valores = controle.pesquisaPreenchimentoUserName(value.resposta, lblUser.Text);
+                                //persquisa o valor do preenchimento para a resposta
+                                valores = controle.pesquisaPreenchimento_perg_userNome(perg[i].id, lblUser.Text);
+                                //verifica se ela esta respondida e em caso positivo incrementa as respostas válidas
                                 if (valores.resposta == 1)
                                 {
-                                    //identificando ao menos uma caixa como marcada altera o valor da variavel de verificação
-                                    testeChk = true;
+                                    respostas++;
                                 }
                             }
-                            if (testeChk)
-                            {
-                                //sendo o valor da variavel de verificação verdadeiro incrementa as respostas válidas
-                                respostas++;
-                            }
+
                         }
-                        //todas as respostas do tipo texto entraram nesta condição
+                        //resposta não obrigatória
                         else
                         {
-                            //persquisa o valor do preenchimento para a resposta
-                            valores = controle.pesquisaPreenchimento_perg_userNome(perg[i].id, lblUser.Text);
-                            //verifica se ela esta respondida e em caso positivo incrementa as respostas válidas
-                            if (valores.resposta == 1)
-                            {
-                                respostas++;
-                            }
+                            //se a resposta é não obrigatória ela em branco é uma resposta valida, logo a variavel respostas é incrementada
+                            respostas++;
                         }
-
                     }
-                    //resposta não obrigatória
+                    bool respondido;
+                    //verifica se todas as respostas possuem respostas válidas segundo seus critérios individuais
+                    if (respostas == countMax)
+                    {
+                        //atribui true a variavel
+                        respondido = true;
+                    }
+                    //se houver uma ou mais respostas obrigatórias em branco
                     else
                     {
-                        //se a resposta é não obrigatória ela em branco é uma resposta valida, logo a variavel respostas é incrementada
-                        respostas++;
+                        respondido = false;
                     }
-                }
-                //verifica se todas as respostas possuem respostas válidas segundo seus critérios individuais
-                if (respostas == countMax)
-                {
-                    //atribui true a variavel
-                    selecao = true;
-                }
-                //se houver uma ou mais respostas obrigatórias em branco
-                else
-                {
-                    selecao = false;
-                }
-                //verifica o estado da variavel que avalia o preenchimento das questões
-                if (selecao)
-                {
-                    try
+
+                    //verifica o estado da variavel que avalia o preenchimento das questões
+                    if (respondido)
                     {
-                        //salva os preenchimentos e informa o sucesso ao usuário
-                        controle.atualizarDados();
-                        ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
-                        //limpa e abandona o estado da sessão
-                        Session.Clear();
-                        Session.Abandon();
-                        //reinicia o contador de perguntas
-                        count = 0;
-                        //encaminha novamente a tela de login
-                        Response.Redirect("Index.aspx");
+                        try
+                        {
+                            //salva os preenchimentos e informa o sucesso ao usuário
+                            controle.atualizarDados();
+                            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('As suas respostas foram salvas, obrigado pela colaboração');", true);
+                            //limpa e abandona o estado da sessão
+                            Session.Clear();
+                            Session.Abandon();
+                            //reinicia o contador de perguntas
+                            count = 0;
+                            //encaminha novamente a tela de login
+                            Response.Redirect("Index.aspx");
+                        }
+                        catch
+                        {
+                            //trata de forma generica qualquer exceção e envia mensagem de erro ao usuário
+                            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Por algum motivo não foi possivel salvar as suas respostas');", true);
+                        }
                     }
-                    catch
+
+                    else
                     {
-                        //trata de forma generica qualquer exceção e envia mensagem de erro ao usuário
-                        ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Por algum motivo não foi possivel salvar as suas respostas');", true);
+                        //na impossibilidade de encerrar a aplicação pela existência de resposta obrigatórias vazias informa o usuário
+                        ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Existe(m) " + (countMax - respostas).ToString() + " perguntas obrigatórias sem resposta');", true);
                     }
+
                 }
 
-                else
-                {
-                    //na impossibilidade de encerrar a aplicação pela existência de resposta obrigatórias vazias informa o usuário
-                    ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Existe(m) " + (countMax - respostas).ToString() + " perguntas obrigatórias sem resposta');", true);
-                }
             }
             //instruções circundadas com try, catch para evitar a exibição de possíveis erros
             catch { }

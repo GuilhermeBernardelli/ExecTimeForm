@@ -235,12 +235,19 @@ namespace CreateApi.Model
                     select renderiza).ToList();
         }
 
+        public Perguntas pesquisaGeralPerguntaPerg_QuestNum(int questId, int pergNum)
+        {
+            return (from pergunta in entityModel.Perguntas
+                    where pergunta.id_questionario == questId
+                    && pergunta.numero == pergNum
+                    select pergunta).Single();
+        }
+
         public Renderizar pesquisaRenderizarId_User(int valor, int user)
         {
             return (from renderiza in entityModel.Renderizar
                     where (renderiza.id_questionario == valor)
-                    && (renderiza.id_usuario == user ||
-                    renderiza.id_usuario == 0)
+                    && (renderiza.id_usuario == user)
                     select renderiza).SingleOrDefault();
         }
 
@@ -280,18 +287,13 @@ namespace CreateApi.Model
                     select preenchimento).ToList();
         }
 
-        public Prenchimentos pesquisaPreenchimentoRender(int perg, int render)
-        {
-            return (from preenchimento in entityModel.Prenchimentos
-                    where (preenchimento.id_pergunta == perg)
-                    && (preenchimento.id_renderizar == render)
-                    select preenchimento).SingleOrDefault();
-        }
-        public Prenchimentos pesquisaPreenchimentoNome(string pesquisa, string user)
+        public Prenchimentos pesquisaPreenchimentoNome(string pesquisa, string user, int id, int idPerg)
         {
             return (from preenchimento in entityModel.Prenchimentos
                     where (preenchimento.valor_resposta.Equals(pesquisa))
                     && (preenchimento.usuario.Equals(user))
+                    && (preenchimento.id_renderizar == id)
+                    && (preenchimento.id_pergunta == idPerg)
                     select preenchimento).SingleOrDefault();
         }
     }

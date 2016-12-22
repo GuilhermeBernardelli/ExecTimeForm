@@ -3,16 +3,13 @@ using CreateApi.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace RenderApi.View
 {
     public partial class Selecao : System.Web.UI.Page
     {
         //variavel global para armazenar a variavel de sessão do usuário vindo da pagina Index.aspx
-        static int registro;
+        static int registro = 0;
         //objetos do tipo de dados da base
         static Usuarios user;
         Questionarios quest;
@@ -24,39 +21,14 @@ namespace RenderApi.View
         Controle controle = new Controle();
 
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {           
             if (!IsPostBack)
             {
                 try
                 {
-                    //verifica se o login foi feito por usuário + senha ou login cac na página Index.aspx
-                    if (Session["user"].ToString() == "")
-                    {
-                        //Variaveis de sessão recebidas no postback url
-                        string regist = Convert.ToString(Request.Form["hddRegFunc"]);
-                        string nome = Convert.ToString(Request.Form["hddNomeFunc"]);
-                        string perfil = Convert.ToString(Request.Form["hddEnumPerfil"]);
-
-                        //verifica a pré existencia do usuário na base de dados
-                        if (controle.pesquisaUsuarioReg(Convert.ToInt32(regist)) == null)
-                        {
-                            ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "alerta", "alert('Usuário CAC não cadastrado na aplicação')", true);
-                            //Adiciona o usuário do acesso via postback url a base de dados 
-                            controle.salvarUsuario(user);
-                            user.nome = nome;
-                            user.registro = Convert.ToInt32(registro);
-                            user.perfil = Convert.ToInt32(perfil);
-                            //salva a adição de usuário
-                            controle.atualizarDados();
-                        }
-                    }
-                    //busca na base de dados o usuário no caso de login por usuário + senha
-                    else
-                    {
-                        //busca na base de dados por meio de variavel de sessão
-                        registro = Convert.ToInt32(Session["user"]);
-                        user = controle.pesquisaUsuarioReg(registro);
-                    }
+                    registro = Convert.ToInt32(Session["user"]);
+                    user = controle.pesquisaUsuarioReg(registro);
+                                      
                     //verifica se na interface login o usuário utilizou o login anônimo e exibe na tela informação referente ao login
                     if (registro == 0)
                     {
@@ -76,12 +48,12 @@ namespace RenderApi.View
                         if (registro != 0)
                         {
                             //busca para cada elemento a existencia deste formulário no formato público
-                            render = controle.pesquisaRenderizarIdUser(value.id_questionario, 0);
+                            render = controle.pesquisaRenderizarIdUser(value.id_questionario, 1);
                             if (render != null)
                             {
                                 //localizando exclui esse render do perfil do usuário mantendo somente o acesso público
-                                controle.excluirRender(value);
-                                controle.atualizarDados();
+                                //controle.excluirRender(value);
+                                //controle.atualizarDados();
                                 //localizado o id do questionário como público
                                 publico = true;
                             }
@@ -103,7 +75,7 @@ namespace RenderApi.View
                     if (registro != 0)
                     {
                         //atribui a lista de objetos do tipo renderização aqueles que tenha como usuário o registro do usuário público
-                        LRend = controle.pesquisaRenderizarReg(0);
+                        LRend = controle.pesquisaRenderizarReg(1);
                         foreach (Renderizar value in LRend)
                         {
                             //busca para o objeto o questionário referente ao render

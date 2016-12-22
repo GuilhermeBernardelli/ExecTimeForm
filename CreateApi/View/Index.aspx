@@ -22,6 +22,7 @@
 </head>
 <body style="height: 685px">
     <form id="form1" runat="server">
+        <input id="codSis" type="hidden" name="codSis" value="FORM01" />
     <div class="auto-style1" align="center">
     
         <asp:Panel ID="pnlLogin" runat="server" Height="266px" HorizontalAlign="Center" Width="535px" BorderStyle="Solid" BorderWidth="1px">
